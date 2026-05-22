@@ -36,8 +36,8 @@
   const CHAT_ICON_SVG = '<svg fill="none" height="24" viewBox="0 0 24 24" width="24"><path class="ytp-svg-fill" fill="#fff" d="M 3,5 L 21,5 L 21,17 L 13,17 L 9,21 L 9,17 L 3,17 Z"/></svg>';
 
   function parseSvg(str) {
-    const doc = new DOMParser().parseFromString(str, 'image/svg+xml');
-    return document.importNode(doc.documentElement, true);
+    const doc = new DOMParser().parseFromString(str, 'text/html');
+    return document.importNode(doc.body.firstElementChild, true);
   }
 
   function applySettings() {
