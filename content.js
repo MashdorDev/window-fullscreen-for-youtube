@@ -35,6 +35,11 @@
 
   const CHAT_ICON_SVG = '<svg fill="none" height="24" viewBox="0 0 24 24" width="24"><path class="ytp-svg-fill" fill="#fff" d="M 3,5 L 21,5 L 21,17 L 13,17 L 9,21 L 9,17 L 3,17 Z"/></svg>';
 
+  function parseSvg(str) {
+    const doc = new DOMParser().parseFromString(str, 'image/svg+xml');
+    return document.importNode(doc.documentElement, true);
+  }
+
   function applySettings() {
     const html = document.documentElement;
     html.classList.toggle(SCROLLABLE_CLASS, settings.scrollableMode);
@@ -181,7 +186,7 @@
     btn.className = 'ytp-button wfs-button';
     btn.title = 'Window Fullscreen (' + settings.hotkey + ')';
     btn.setAttribute('aria-label', 'Window Fullscreen');
-    btn.innerHTML = ICON_SVG;
+    btn.appendChild(parseSvg(ICON_SVG));
     btn.addEventListener('click', toggle);
     return btn;
   }
@@ -231,7 +236,7 @@
     btn.className = 'ytp-button wfs-button';
     btn.title = 'Toggle chat';
     btn.setAttribute('aria-label', 'Toggle chat');
-    btn.innerHTML = CHAT_ICON_SVG;
+    btn.appendChild(parseSvg(CHAT_ICON_SVG));
     btn.addEventListener('click', toggleChat);
     return btn;
   }
@@ -404,7 +409,7 @@
 
     const iconEl = document.createElement('div');
     iconEl.className = 'ytp-menuitem-icon';
-    if (iconSvg) iconEl.innerHTML = iconSvg;
+    if (iconSvg) iconEl.appendChild(parseSvg(iconSvg));
 
     const labelEl = document.createElement('div');
     labelEl.className = 'ytp-menuitem-label';
