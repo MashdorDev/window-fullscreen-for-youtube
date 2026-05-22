@@ -377,12 +377,24 @@
   }
 
   const MENU_ITEMS = [
-    { label: 'Auto window fullscreen', key: 'autoToggle' },
-    { label: 'Scrollable mode', key: 'scrollableMode' },
-    { label: 'Sticky chat', key: 'stickyChat' },
+    {
+      label: 'Auto window fullscreen',
+      key: 'autoToggle',
+      icon: '<svg fill="none" height="24" viewBox="0 0 24 24" width="24"><path class="ytp-svg-fill" fill="#fff" fill-rule="evenodd" d="M 4,5 L 20,5 L 20,19 L 4,19 Z M 6,7 L 6,17 L 18,17 L 18,7 Z"/><path class="ytp-svg-fill" fill="#fff" d="M 10,9 L 15,12 L 10,15 Z"/></svg>',
+    },
+    {
+      label: 'Scrollable mode',
+      key: 'scrollableMode',
+      icon: '<svg fill="none" height="24" viewBox="0 0 24 24" width="24"><path class="ytp-svg-fill" fill="#fff" d="M 12,3 L 7,8 L 17,8 Z M 7,11 L 17,11 L 17,13 L 7,13 Z M 12,21 L 7,16 L 17,16 Z"/></svg>',
+    },
+    {
+      label: 'Sticky chat',
+      key: 'stickyChat',
+      icon: '<svg fill="none" height="24" viewBox="0 0 24 24" width="24"><circle class="ytp-svg-fill" fill="#fff" cx="12" cy="7" r="3.5"/><path class="ytp-svg-fill" fill="#fff" d="M 11,10.5 L 13,10.5 L 13,17 L 12,21 L 11,17 Z"/></svg>',
+    },
   ];
 
-  function createMenuItem(label, key) {
+  function createMenuItem(label, key, iconSvg) {
     const div = document.createElement('div');
     div.className = 'ytp-menuitem ' + MENU_ITEM_CLASS;
     div.setAttribute('role', 'menuitemcheckbox');
@@ -392,6 +404,7 @@
 
     const iconEl = document.createElement('div');
     iconEl.className = 'ytp-menuitem-icon';
+    if (iconSvg) iconEl.innerHTML = iconSvg;
 
     const labelEl = document.createElement('div');
     labelEl.className = 'ytp-menuitem-label';
@@ -425,7 +438,7 @@
     if (!panel) return;
     if (panel.querySelector('.' + MENU_ITEM_CLASS)) return;
     for (const cfg of MENU_ITEMS) {
-      panel.appendChild(createMenuItem(cfg.label, cfg.key));
+      panel.appendChild(createMenuItem(cfg.label, cfg.key, cfg.icon));
     }
   }
 
