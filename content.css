@@ -1,0 +1,61 @@
+.wfs-button {
+  width: 36px;
+  height: 36px;
+  vertical-align: top;
+  opacity: 0.9;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.wfs-button:hover {
+  opacity: 1;
+}
+
+.wfs-button svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  margin: 6px auto;
+}
+
+html.wfs-active {
+  overflow: hidden !important;
+}
+
+html.wfs-active ytd-watch-flexy {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9998 !important;
+  background: black !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html.wfs-active #masthead-container,
+html.wfs-active ytd-watch-flexy #secondary,
+html.wfs-active ytd-watch-flexy #below,
+html.wfs-active ytd-watch-flexy #comments {
+  display: none !important;
+}
+
+html.wfs-active ytd-watch-flexy #primary,
+html.wfs-active ytd-watch-flexy #primary-inner,
+html.wfs-active ytd-watch-flexy #player-container-outer,
+html.wfs-active ytd-watch-flexy #player-container,
+html.wfs-active ytd-watch-flexy #ytd-player,
+html.wfs-active ytd-watch-flexy .html5-video-player {
+  width: 100% !important;
+  max-width: none !important;
+  height: 100vh !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html.wfs-active video.html5-main-video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}

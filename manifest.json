@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Window Fullscreen for YouTube",
+  "version": "0.1.0",
+  "description": "Watch YouTube in true windowed fullscreen — fill your browser window without going OS-level fullscreen. Free and open source.",
+  "permissions": ["storage"],
+  "host_permissions": ["*://www.youtube.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "window-fullscreen-for-youtube@dorzairi.dev",
+      "strict_min_version": "109.0"
+    }
+  }
+}
