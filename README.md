@@ -24,8 +24,8 @@ Every feature is free, forever — no paywall, no subscription, no nag prompts. 
 
 ## Install
 
-**Firefox:** coming soon to AMO
-**Chrome:** coming soon to the Chrome Web Store
+**Firefox:** pending [AMO](https://addons.mozilla.org/) review. Until then, grab the latest signed `.xpi` from [Releases](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest).
+**Chrome:** Chrome Web Store submission not yet started. Load unpacked from the latest release zip — see below.
 
 ### Development install — Firefox
 
