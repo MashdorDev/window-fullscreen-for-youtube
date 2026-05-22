@@ -1,14 +1,22 @@
+:root {
+  color-scheme: dark;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
   padding: 24px;
-  min-width: 360px;
+  min-width: 420px;
   background: #1a1a1a;
   color: #e8e8e8;
 }
 
 main {
-  max-width: 480px;
+  max-width: 520px;
+}
+
+header {
+  margin-bottom: 20px;
 }
 
 h1 {
@@ -18,34 +26,102 @@ h1 {
 
 .tagline {
   color: #aaa;
-  margin: 0 0 20px;
+  margin: 0;
   font-size: 13px;
 }
 
 h2 {
-  font-size: 14px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #888;
   margin: 20px 0 8px;
 }
 
-section ul {
-  padding-left: 18px;
-  margin: 0;
+section {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #2a2a2a;
 }
 
-li {
-  margin: 4px 0;
+section:last-of-type {
+  border-bottom: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
   font-size: 14px;
+  cursor: pointer;
 }
 
-kbd {
-  background: #333;
-  border: 1px solid #555;
-  border-radius: 3px;
-  padding: 1px 6px;
+.row .label {
+  flex: 1;
+}
+
+input[type="text"] {
+  background: #2a2a2a;
+  color: #e8e8e8;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 14px;
   font-family: monospace;
+  width: 160px;
+  text-align: right;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #4da3ff;
+}
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #4da3ff;
+  cursor: pointer;
+}
+
+.hint {
+  font-size: 12px;
+  color: #888;
+  margin: 6px 0 0;
+}
+
+code {
+  background: #2a2a2a;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+#reset {
+  background: #2a2a2a;
+  color: #e8e8e8;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#reset:hover {
+  background: #333;
+  border-color: #555;
+}
+
+.status {
+  color: #4da3ff;
   font-size: 12px;
 }
 
@@ -58,8 +134,18 @@ a:hover {
   text-decoration: underline;
 }
 
-.support {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #333;
+em {
+  color: #777;
+  font-style: normal;
+  font-size: 11px;
+}
+
+ul {
+  padding-left: 18px;
+  margin: 4px 0 0;
+}
+
+li {
+  margin: 4px 0;
+  font-size: 14px;
 }

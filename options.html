@@ -7,26 +7,71 @@
 </head>
 <body>
   <main>
-    <h1>Window Fullscreen for YouTube</h1>
-    <p class="tagline">Settings — coming soon. v0.1 ships with sensible defaults.</p>
+    <header>
+      <h1>Window Fullscreen for YouTube</h1>
+      <p class="tagline">Settings sync across surfaces — the YouTube gear menu shows the most common toggles, everything is here.</p>
+    </header>
 
     <section>
-      <h2>Defaults</h2>
-      <ul>
-        <li>Hotkey: <kbd>Shift</kbd>+<kbd>F</kbd></li>
-        <li>Exit: <kbd>Esc</kbd></li>
-        <li>Button: appears in YouTube's player control bar</li>
-      </ul>
+      <h2>Hotkey</h2>
+      <label class="row">
+        <span class="label">Toggle hotkey</span>
+        <input type="text" id="hotkey" placeholder="Shift+F" spellcheck="false">
+      </label>
+      <p class="hint">Format: <code>Shift+F</code>, <code>Ctrl+Alt+W</code>, etc. Modifiers: <code>Shift</code>, <code>Ctrl</code>, <code>Alt</code>, <code>Meta</code>. <code>Esc</code> always exits.</p>
+    </section>
+
+    <section>
+      <h2>Behavior</h2>
+      <label class="row">
+        <span class="label">Auto-enter on new video</span>
+        <input type="checkbox" id="autoToggle">
+      </label>
+      <label class="row">
+        <span class="label">Scrollable mode</span>
+        <input type="checkbox" id="scrollableMode">
+      </label>
+      <p class="hint">In scrollable mode, the page stays scrollable while the player is enlarged — you can scroll to see comments/related videos below.</p>
+      <label class="row">
+        <span class="label">Sticky chat</span>
+        <input type="checkbox" id="stickyChat">
+      </label>
+      <p class="hint">When on, the chat panel stays fixed to the right edge and the comments below the video respect the chat width. When off, the chat sits in YouTube's normal column flow and scrolls with the page.</p>
+    </section>
+
+    <section>
+      <h2>Hide while active</h2>
+      <p class="hint">Granular control over what disappears when windowed fullscreen is on.</p>
+      <label class="row">
+        <span class="label">Masthead (top bar)</span>
+        <input type="checkbox" id="hideMasthead">
+      </label>
+      <label class="row">
+        <span class="label">Sidebar (related videos)</span>
+        <input type="checkbox" id="hideSidebar">
+      </label>
+      <label class="row">
+        <span class="label">Comments</span>
+        <input type="checkbox" id="hideComments">
+      </label>
+    </section>
+
+    <section class="actions">
+      <button id="reset" type="button">Reset to defaults</button>
+      <span id="status" class="status" aria-live="polite"></span>
     </section>
 
     <section class="support">
       <h2>Support development</h2>
       <p>This extension is free and open source. If it's useful to you:</p>
       <ul>
-        <li><a href="#" id="sponsors-link">GitHub Sponsors</a></li>
-        <li><a href="#" id="kofi-link">Ko-fi</a></li>
+        <li><a href="https://github.com/MashdorDev/window-fullscreen-for-youtube" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="#" id="sponsors-link">GitHub Sponsors</a> <em>(link pending)</em></li>
+        <li><a href="#" id="kofi-link">Ko-fi</a> <em>(link pending)</em></li>
       </ul>
     </section>
   </main>
+
+  <script src="options.js"></script>
 </body>
 </html>
