@@ -2,16 +2,21 @@
 
 A free, open-source Firefox + Chrome extension that gives YouTube a real windowed-fullscreen mode — the player fills the browser window without going OS-level fullscreen.
 
-Built for ultrawide and dual-monitor users who lose real estate to YouTube's letterboxing in native fullscreen.
+Built for ultrawide and dual-monitor users who lose real estate to YouTube's letterboxing in native fullscreen, and for anyone who wants a bigger player while keeping the browser chrome accessible.
 
 ## Features
 
-- Native player button in YouTube's own control bar (not a toolbar popup)
-- Default hotkey: `Shift+F`
-- `Esc` to exit
-- Every feature free, forever — no paywall, no subscription, no nag prompts
-- Open source (MIT)
-- Zero runtime dependencies, no build step
+- **Native player button** in YouTube's own control bar — not a toolbar popup, not a floating widget
+- **Configurable hotkey** (default `Shift+F`), `Esc` to exit
+- **Auto-toggle** on new video (optional)
+- **Scrollable mode** — keep scrolling past the player to reach comments and related videos
+- **Granular page-chrome hiding** — toggle masthead, sidebar, comments independently
+- **Hover-to-reveal masthead** — search bar fades in when you move the cursor to the top edge
+- **Live chat side-panel** — dedicated chat toggle button on live/post-live videos with a draggable resize handle. Choose sticky chat (always pinned to right) or non-sticky (scrolls with the page)
+- **Native YouTube integration** — three toggles inside YouTube's gear menu, styled to match
+- **Smooth transitions** that respect `prefers-reduced-motion`
+
+Every feature is free, forever — no paywall, no subscription, no nag prompts. Open source (MIT). Zero runtime dependencies, no build step.
 
 ## Install
 
@@ -30,16 +35,23 @@ Built for ultrawide and dual-monitor users who lose real estate to YouTube's let
 2. Open `chrome://extensions`, enable Developer mode
 3. Click "Load unpacked", select the cloned folder
 
-## Status
+## Why this exists
 
-v0.1 — prototype. Button injection + toggle + hotkey works. Options page is a placeholder.
+The incumbent extension (YouTube Windowed FullScreen by navi.jador) pioneered the windowed-fullscreen pattern but moved core features behind a paywall in v4.7. The community noticed — the AMO reviews are bimodal, split between users who love the feature and users who feel rug-pulled. This extension ships every previously-paid feature for free, with the source open for inspection.
 
-Roadmap toward v1.0:
-- Configurable hotkey
-- Auto-toggle on video start
-- Scrollable fullscreen mode
-- Granular page-element hide toggles (comments, sidebar, masthead)
-- Icons
+## Settings
+
+Open settings by clicking the toolbar icon (after pinning the extension), or use the three toggles directly inside YouTube's gear menu:
+
+| Setting | Default | Description |
+|---|---|---|
+| `hotkey` | `Shift+F` | Toggle hotkey, modifier combos supported (e.g. `Ctrl+Alt+W`) |
+| `autoToggle` | off | Auto-enter windowed fullscreen on each new video |
+| `scrollableMode` | off | Allow scrolling beneath the player to reach comments |
+| `stickyChat` | on | Pin chat to the right edge (live videos); off = chat scrolls with page |
+| `hideMasthead` | on | Hide YouTube's top bar (hover to reveal) |
+| `hideSidebar` | on | Hide related videos sidebar (ignored on live videos so the chat stays accessible) |
+| `hideComments` | on | Hide comments (ignored in scrollable mode) |
 
 ## Support
 

@@ -1,3 +1,18 @@
+@media (prefers-reduced-motion: no-preference) {
+  #full-bleed-container,
+  #movie_player:not(.miniplayer),
+  ytd-page-manager,
+  ytd-watch-flexy,
+  ytd-watch-flexy #primary,
+  #masthead-container,
+  ytd-masthead,
+  ytd-live-chat-frame#chat {
+    transition-property: height, width, margin-top, opacity, padding-right;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out;
+  }
+}
+
 html.wfs-active body {
   overflow-y: hidden !important;
   overflow-x: hidden !important;
@@ -120,7 +135,6 @@ html.wfs-active.wfs-hide-masthead #masthead-container,
 html.wfs-active.wfs-hide-masthead ytd-masthead {
   opacity: 0 !important;
   pointer-events: none !important;
-  transition: opacity 0.2s ease-out !important;
   z-index: 2000 !important;
 }
 
