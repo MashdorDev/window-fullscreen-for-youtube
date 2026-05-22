@@ -42,7 +42,10 @@ https://github.com/MashdorDev/window-fullscreen-for-youtube
 
 ### Support
 
-If this extension is useful to you, consider sponsoring development on GitHub Sponsors or Ko-fi — links coming soon.
+If this extension is useful to you, consider sponsoring development:
+
+- GitHub Sponsors: https://github.com/sponsors/MashdorDev
+- Ko-fi: https://ko-fi.com/dorzairidev
 ```
 
 ## Categories

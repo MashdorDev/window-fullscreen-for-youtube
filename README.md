@@ -57,8 +57,8 @@ Open settings by clicking the toolbar icon (after pinning the extension), or use
 
 This extension is free and will stay free. If it's useful to you, consider supporting development:
 
-- GitHub Sponsors: _(link pending)_
-- Ko-fi: _(link pending)_
+- [GitHub Sponsors](https://github.com/sponsors/MashdorDev)
+- [Ko-fi](https://ko-fi.com/dorzairidev)
 
 ## License
 

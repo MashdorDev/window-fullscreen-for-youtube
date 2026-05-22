@@ -149,3 +149,52 @@ li {
   margin: 4px 0;
   font-size: 14px;
 }
+
+.support-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.support-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 6px;
+  background: #2a2a2a;
+  color: #e8e8e8;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #3a3a3a;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+}
+
+.support-btn:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.support-btn svg {
+  flex-shrink: 0;
+}
+
+.support-btn.sponsors:hover {
+  background: #db61a2;
+  border-color: #db61a2;
+  color: #fff;
+}
+
+.support-btn.kofi:hover {
+  background: #ff5e5b;
+  border-color: #ff5e5b;
+  color: #fff;
+}
+
+.support-btn.github:hover {
+  background: #3a3a3a;
+  border-color: #555;
+  color: #fff;
+}
