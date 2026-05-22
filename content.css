@@ -1,61 +1,47 @@
-.wfs-button {
-  width: 36px;
-  height: 36px;
-  vertical-align: top;
-  opacity: 0.9;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.wfs-button:hover {
-  opacity: 1;
-}
-
-.wfs-button svg {
-  width: 24px;
-  height: 24px;
-  display: block;
-  margin: 6px auto;
-}
-
-html.wfs-active {
+html.wfs-active,
+html.wfs-active body {
   overflow: hidden !important;
 }
 
-html.wfs-active ytd-watch-flexy {
+html.wfs-active .html5-video-player {
   position: fixed !important;
-  inset: 0 !important;
-  z-index: 9998 !important;
-  background: black !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-html.wfs-active #masthead-container,
-html.wfs-active ytd-watch-flexy #secondary,
-html.wfs-active ytd-watch-flexy #below,
-html.wfs-active ytd-watch-flexy #comments {
-  display: none !important;
-}
-
-html.wfs-active ytd-watch-flexy #primary,
-html.wfs-active ytd-watch-flexy #primary-inner,
-html.wfs-active ytd-watch-flexy #player-container-outer,
-html.wfs-active ytd-watch-flexy #player-container,
-html.wfs-active ytd-watch-flexy #ytd-player,
-html.wfs-active ytd-watch-flexy .html5-video-player {
-  width: 100% !important;
-  max-width: none !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
   height: 100vh !important;
+  max-width: none !important;
   max-height: none !important;
   margin: 0 !important;
   padding: 0 !important;
+  z-index: 9999 !important;
+  background: black !important;
 }
 
-html.wfs-active video.html5-main-video {
+html.wfs-active .html5-video-player .html5-video-container {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain;
+  max-width: none !important;
+  max-height: none !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+html.wfs-active .html5-video-player video.html5-main-video,
+html.wfs-active .html5-video-player video.video-stream {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  top: 0 !important;
+  left: 0 !important;
+  object-fit: contain !important;
+}
+
+html.wfs-active #masthead-container,
+html.wfs-active ytd-masthead,
+html.wfs-active ytd-watch-flexy #secondary,
+html.wfs-active ytd-watch-flexy #below,
+html.wfs-active ytd-watch-flexy #comments,
+html.wfs-active ytd-watch-flexy ytd-comments {
+  display: none !important;
 }
