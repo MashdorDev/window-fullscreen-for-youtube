@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '20'
       - name: web-ext lint
-        run: npx --yes web-ext lint --ignore-files "AMO-LISTING.md"
+        run: npx --yes web-ext lint
 
   build:
     name: Build .xpi
@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: '20'
       - name: web-ext build
-        run: npx --yes web-ext build --overwrite-dest --ignore-files "AMO-LISTING.md" "CONTRIBUTING.md"
+        run: npx --yes web-ext build --overwrite-dest
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -59,8 +59,7 @@ jobs:
           npx --yes web-ext sign \
             --api-key="$AMO_JWT_ISSUER" \
             --api-secret="$AMO_JWT_SECRET" \
-            --channel=listed \
-            --ignore-files "AMO-LISTING.md" "CONTRIBUTING.md"
+            --channel=listed
 
   release:
     name: Attach .xpi to GitHub Release

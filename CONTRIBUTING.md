@@ -31,7 +31,7 @@ npx web-ext lint
 npx web-ext build --overwrite-dest
 ```
 
-Output goes to `web-ext-artifacts/`.
+Output goes to `web-ext-artifacts/`. File ignore patterns live in `web-ext.config.cjs`.
 
 ## Release checklist
 

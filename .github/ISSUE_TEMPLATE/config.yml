@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/MashdorDev/window-fullscreen-for-youtube/discussions
+    about: For questions, ideas, or general feedback — please use Discussions instead of issues.

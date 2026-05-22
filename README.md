@@ -1,5 +1,9 @@
 # Window Fullscreen for YouTube
 
+[![CI](https://github.com/MashdorDev/window-fullscreen-for-youtube/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MashdorDev/window-fullscreen-for-youtube/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/MashdorDev/window-fullscreen-for-youtube?label=release)](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest)
+[![License](https://img.shields.io/github/license/MashdorDev/window-fullscreen-for-youtube)](./LICENSE)
+
 A free, open-source Firefox + Chrome extension that gives YouTube a real windowed-fullscreen mode — the player fills the browser window without going OS-level fullscreen.
 
 Built for ultrawide and dual-monitor users who lose real estate to YouTube's letterboxing in native fullscreen, and for anyone who wants a bigger player while keeping the browser chrome accessible.
