@@ -118,7 +118,18 @@ html.wfs-active ytd-watch-flexy {
 
 html.wfs-active.wfs-hide-masthead #masthead-container,
 html.wfs-active.wfs-hide-masthead ytd-masthead {
-  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease-out !important;
+  z-index: 2000 !important;
+}
+
+html.wfs-active.wfs-hide-masthead.wfs-masthead-revealed #masthead-container,
+html.wfs-active.wfs-hide-masthead.wfs-masthead-revealed ytd-masthead,
+html.wfs-active.wfs-hide-masthead #masthead-container:focus-within,
+html.wfs-active.wfs-hide-masthead ytd-masthead:focus-within {
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-available) ytd-watch-flexy #secondary {
@@ -133,6 +144,8 @@ html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-available) ytd-watch-flexy #prima
   width: 100% !important;
   max-width: none !important;
   margin-right: 0 !important;
+  padding-right: 32px !important;
+  box-sizing: border-box !important;
 }
 
 html.wfs-active:not(.wfs-scrollable).wfs-hide-comments ytd-watch-flexy #below,

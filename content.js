@@ -550,6 +550,22 @@
     true
   );
 
+  const TOP_HOVER_THRESHOLD = 30;
+  const MASTHEAD_REVEAL_CLASS = 'wfs-masthead-revealed';
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isActive() || !settings.hideMasthead) return;
+    const html = document.documentElement;
+    const revealed = html.classList.contains(MASTHEAD_REVEAL_CLASS);
+    if (e.clientY <= TOP_HOVER_THRESHOLD) {
+      if (!revealed) html.classList.add(MASTHEAD_REVEAL_CLASS);
+    } else if (revealed) {
+      const masthead = document.querySelector('#masthead-container');
+      const bottom = (masthead && masthead.offsetHeight) || 56;
+      if (e.clientY > bottom + 20) html.classList.remove(MASTHEAD_REVEAL_CLASS);
+    }
+  });
+
   function isWatchPage() {
     const p = location.pathname;
     return p.includes('/watch') || p.includes('/live/') || p.includes('/clip/');
