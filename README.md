@@ -24,8 +24,9 @@ Every feature is free, forever — no paywall, no subscription, no nag prompts. 
 
 ## Install
 
-**Firefox:** pending [AMO](https://addons.mozilla.org/) review. Until then, grab the latest signed `.xpi` from [Releases](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest).
-**Chrome:** Chrome Web Store submission not yet started. Load unpacked from the latest release zip — see below.
+**Firefox:** pending [AMO](https://addons.mozilla.org/) review. Until then, download the signed `.xpi` from [Releases](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest) and either drag it into a Firefox window or open the `.xpi` URL in Firefox — it will install directly. Every tag triggers CI to sign and attach a fresh `.xpi`.
+
+**Chrome:** Chrome Web Store submission not yet started. Load unpacked from the latest release `.zip` — see below.
 
 ### Development install — Firefox
 

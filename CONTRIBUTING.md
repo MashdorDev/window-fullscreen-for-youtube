@@ -22,7 +22,18 @@
 
 GitHub Actions runs on every push to `main` / `dev` and every PR:
 - `web-ext lint` — must pass 0 errors
-- `web-ext build` — produces an `.xpi` artifact retained for 14 days
+- `web-ext build` — produces a `.zip` artifact retained for 14 days
+
+Additionally on `v*` tag pushes:
+- `sign-unlisted` — Mozilla-signs the build via `web-ext sign --channel=unlisted` and attaches the signed `.xpi` to the GitHub Release. This is the user installer.
+- `deploy-amo-listed` — uploads to AMO's listed channel via `web-ext sign --channel=listed`. Has `continue-on-error: true` because this **fails when a version is already in AMO's review queue** (e.g., after a manual upload of the same version). The signed-unlisted job and release attachment still complete in that case.
+- `release-zip` — attaches the unsigned `.zip` source bundle to the GitHub Release.
+
+Secrets needed (Settings → Secrets and variables → Actions):
+- `AMO_JWT_ISSUER`
+- `AMO_JWT_SECRET`
+
+Get them at https://addons.mozilla.org/en-US/developers/addon/api/key/ (Firefox Account required).
 
 ## Build locally
 
