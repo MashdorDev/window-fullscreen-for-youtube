@@ -7,11 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-05-22
+
 ### Added
 - `web-ext.config.cjs` so lint/build commands no longer need `--ignore-files` flags
-- This `CHANGELOG.md`
-- README badges (CI, release, license)
-- GitHub issue templates (bug report, feature request)
+- `CHANGELOG.md` (Keep a Changelog format)
+- README badges (CI status, latest release, license)
+- GitHub issue templates (bug report, feature request) + Discussions link
+- `.github/FUNDING.yml` (Sponsor button: GitHub Sponsors + Ko-fi)
+- `CONTRIBUTING.md` documenting the dev/main branch strategy
+- CI workflow that lints + builds on every push and, on `v*` tag push:
+  - Uploads to AMO listed channel (auto-publish, continue-on-error)
+  - Signs `--channel=unlisted` for self-distribution
+  - Attaches both `.zip` (source) and signed `.xpi` (installable) to the GitHub Release
+
+### Changed
+- README install section reflects AMO-pending state and points users to
+  GitHub Releases as the install source until the AMO listing is live.
+- `strict_min_version` already at 142.0 (since v0.2.2); no change here, noted for completeness.
 
 ## [0.2.4] - 2026-05-22
 
