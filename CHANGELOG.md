@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.5] - 2026-05-22
 
+First release with a Mozilla-signed `.xpi` attached to the GitHub Release — installable directly in regular Firefox without waiting for AMO listing approval.
+
 ### Added
 - `web-ext.config.cjs` so lint/build commands no longer need `--ignore-files` flags
 - `CHANGELOG.md` (Keep a Changelog format)
@@ -17,14 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.github/FUNDING.yml` (Sponsor button: GitHub Sponsors + Ko-fi)
 - `CONTRIBUTING.md` documenting the dev/main branch strategy
 - CI workflow that lints + builds on every push and, on `v*` tag push:
-  - Uploads to AMO listed channel (auto-publish, continue-on-error)
-  - Signs `--channel=unlisted` for self-distribution
-  - Attaches both `.zip` (source) and signed `.xpi` (installable) to the GitHub Release
+  - **`sign-unlisted`** — runs `web-ext sign --channel=unlisted`, attaches the Mozilla-signed `.xpi` to the GitHub Release. This is the user-facing installer.
+  - **`deploy-amo-listed`** — runs `web-ext sign --channel=listed` to publish on AMO. `continue-on-error: true` since this fails when a version is already in AMO's review queue from a manual upload.
+  - **`release-zip`** — attaches the unsigned `.zip` (source bundle) to the GitHub Release for developers and inspection.
+- `AMO_JWT_ISSUER` / `AMO_JWT_SECRET` GitHub Secrets wired up to the workflow.
 
 ### Changed
-- README install section reflects AMO-pending state and points users to
-  GitHub Releases as the install source until the AMO listing is live.
-- `strict_min_version` already at 142.0 (since v0.2.2); no change here, noted for completeness.
+- README install section reflects AMO-pending state and points users to the signed `.xpi` on GitHub Releases as the install source until the AMO listing is approved.
 
 ## [0.2.4] - 2026-05-22
 
