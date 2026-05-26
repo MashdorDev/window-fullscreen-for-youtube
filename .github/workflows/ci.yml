@@ -125,7 +125,7 @@ jobs:
           path: ./artifact
       - name: Upload to Chrome Web Store
         if: steps.check.outputs.ready == 'true'
-        uses: mnao305/chrome-extension-upload@v6
+        uses: mnao305/chrome-extension-upload@fdfe79400af990f5145a319e834aee64907ccff4 # v6.0.0
         with:
           file-path: ./artifact/*.zip
           glob: true
@@ -134,13 +134,14 @@ jobs:
           client-secret: ${{ secrets.CWS_CLIENT_SECRET }}
           refresh-token: ${{ secrets.CWS_REFRESH_TOKEN }}
 
-  # After both stores publish, cut a GitHub Release tagged v<version> with
-  # the signed unlisted .xpi (for self-distribution) and the build .zip.
+  # Once Firefox publishes, cut a GitHub Release tagged v<version> with the
+  # signed unlisted .xpi (for self-distribution) and the build .zip. Waits for
+  # the Chrome attempt to finish but does not require it to succeed.
   release:
     name: GitHub Release
     runs-on: ubuntu-latest
-    needs: [deploy-chrome, detect-version, build]
-    if: needs.detect-version.outputs.changed == 'true'
+    needs: [deploy-firefox, deploy-chrome, detect-version, build]
+    if: ${{ !cancelled() && needs.detect-version.outputs.changed == 'true' && needs.deploy-firefox.result == 'success' }}
     permissions:
       contents: write
     steps:
