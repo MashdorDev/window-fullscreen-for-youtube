@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Window Fullscreen for YouTube",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Watch YouTube in true windowed fullscreen — fill your browser window without going OS-level fullscreen. Free and open source.",
   "icons": {
     "16": "icons/icon-16.png",

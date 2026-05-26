@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.6] - 2026-05-26
+
+First AMO update since 0.2.3. The fixes tagged as 0.2.4 and 0.2.5 never reached the store — the old tag-based AMO upload ran with `continue-on-error: true` and failed silently. This release carries them to users.
+
+### Fixed
+- **Player-control SVG icons not rendering** for live AMO users. The published 0.2.3 has the 0.2.2 `innerHTML` → `DOMParser` switch but lacks the 0.2.4 follow-up, so `parseSvg` mis-parsed SVG namespacing and the button icons came out blank. Now parsed as `text/html`.
+
+### Changed
+- Release pipeline publishes to Firefox (AMO) then Chrome Web Store automatically on a `manifest.json` version bump merged to `main`, replacing manual `v*` tag uploads.
+
 ## [0.2.5] - 2026-05-22
 
 First release with a Mozilla-signed `.xpi` attached to the GitHub Release — installable directly in regular Firefox without waiting for AMO listing approval.
