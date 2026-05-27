@@ -3,6 +3,7 @@
 [![CI](https://github.com/MashdorDev/window-fullscreen-for-youtube/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MashdorDev/window-fullscreen-for-youtube/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/MashdorDev/window-fullscreen-for-youtube?label=release)](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest)
 [![Mozilla Add-on](https://img.shields.io/amo/v/window-fullscreen-for-youtube?label=firefox)](https://addons.mozilla.org/en-US/firefox/addon/window-fullscreen-for-youtube/)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jghckcdnmagoohfbjplpfjbnbkpfcekl?label=chrome)](https://chromewebstore.google.com/detail/window-fullscreen-for-you/jghckcdnmagoohfbjplpfjbnbkpfcekl)
 [![License](https://img.shields.io/github/license/MashdorDev/window-fullscreen-for-youtube)](./LICENSE)
 
 A free, open-source Firefox + Chrome extension that gives YouTube a real windowed-fullscreen mode — the player fills the browser window without going OS-level fullscreen.
@@ -44,7 +45,7 @@ Every feature is free, forever — no paywall, no subscription, no nag prompts. 
 
 **Firefox:** [Install from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/window-fullscreen-for-youtube/) — reviewed and listed on AMO.
 
-**Chrome:** submitted to the Chrome Web Store and pending review — the store link will be added here once it's approved. In the meantime, load it unpacked (see below) or grab the `.zip` from [Releases](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest).
+**Chrome:** [Install from the Chrome Web Store](https://chromewebstore.google.com/detail/window-fullscreen-for-you/jghckcdnmagoohfbjplpfjbnbkpfcekl) — reviewed and listed. You can also load it unpacked (see below) or grab the `.zip` from [Releases](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest).
 
 ### Development install — Firefox
 
