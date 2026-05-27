@@ -2,11 +2,29 @@
 
 [![CI](https://github.com/MashdorDev/window-fullscreen-for-youtube/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MashdorDev/window-fullscreen-for-youtube/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/MashdorDev/window-fullscreen-for-youtube?label=release)](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest)
+[![Mozilla Add-on](https://img.shields.io/amo/v/window-fullscreen-for-youtube?label=firefox)](https://addons.mozilla.org/en-US/firefox/addon/window-fullscreen-for-youtube/)
 [![License](https://img.shields.io/github/license/MashdorDev/window-fullscreen-for-youtube)](./LICENSE)
 
 A free, open-source Firefox + Chrome extension that gives YouTube a real windowed-fullscreen mode — the player fills the browser window without going OS-level fullscreen.
 
 Built for ultrawide and dual-monitor users who lose real estate to YouTube's letterboxing in native fullscreen, and for anyone who wants a bigger player while keeping the browser chrome accessible.
+
+## Showcase
+
+<p align="center">
+  <img src="Assets/Chrome/fullwindowed.jpg" alt="Windowed fullscreen — the video fills the entire browser window while the tabs and address bar stay visible" width="100%">
+</p>
+
+<p align="center"><em>Windowed fullscreen: the player fills the whole browser window — no OS-level fullscreen, so your tabs, address bar, and taskbar stay put.</em></p>
+
+| | |
+|:---:|:---:|
+| <img src="Assets/Chrome/controls.jpg" alt="Native windowed-fullscreen button in YouTube's player control bar" width="420"> | <img src="Assets/Chrome/Settings.png" alt="Toggles added inside YouTube's gear menu" width="420"> |
+| **Native player button** — added right into YouTube's control bar, not a floating widget. | **Gear-menu toggles** — the common options live inside YouTube's own settings menu. |
+| <img src="Assets/Chrome/StickyChat.jpg" alt="Live chat pinned to the right edge in windowed fullscreen" width="420"> | <img src="Assets/Chrome/ScrollableChat.png" alt="Scrollable mode keeps comments and related videos reachable" width="420"> |
+| **Sticky chat** — live chat pinned to the right edge, with a draggable resize handle. | **Scrollable mode** — keep the player large and scroll down to comments. |
+| <img src="Assets/Chrome/Search.jpg" alt="Hover to reveal YouTube's search bar at the top edge" width="420"> | <img src="Assets/Chrome/extension.png" alt="The extension's full options page" width="420"> |
+| **Hover-to-reveal masthead** — the search bar fades in at the top edge. | **Options page** — configurable hotkey and granular show/hide controls. |
 
 ## Features
 
@@ -24,9 +42,9 @@ Every feature is free, forever — no paywall, no subscription, no nag prompts. 
 
 ## Install
 
-**Firefox:** pending [AMO](https://addons.mozilla.org/) review. Until then, download the signed `.xpi` from [Releases](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest) and either drag it into a Firefox window or open the `.xpi` URL in Firefox — it will install directly. Every tag triggers CI to sign and attach a fresh `.xpi`.
+**Firefox:** [Install from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/window-fullscreen-for-youtube/) — reviewed and listed on AMO.
 
-**Chrome:** Chrome Web Store submission not yet started. Load unpacked from the latest release `.zip` — see below.
+**Chrome:** Chrome Web Store submission in progress. Until it's live, load it unpacked (see below) or grab the `.zip` from [Releases](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest).
 
 ### Development install — Firefox
 
@@ -39,6 +57,17 @@ Every feature is free, forever — no paywall, no subscription, no nag prompts. 
 1. Clone this repo
 2. Open `chrome://extensions`, enable Developer mode
 3. Click "Load unpacked", select the cloned folder
+
+## Documentation
+
+Full docs — user guide, architecture, release process, and privacy policy — live at
+**[docs.dorzairi.com](https://docs.dorzairi.com/docs/6bd59cc4-58fa-4c62-aca2-4c74c2c4aa95/)**,
+with the markdown source under [`docs/`](./docs) in this repo.
+
+- [User Guide](https://docs.dorzairi.com/docs/db7a214e-9481-4f93-b30b-8f4b62e50166/)
+- [Privacy Policy](https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/)
+- [Architecture](./docs/architecture.md)
+- [Release & CI](./docs/release-and-ci.md)
 
 ## Why this exists
 
@@ -67,7 +96,7 @@ This extension is free and will stay free. If it's useful to you, consider suppo
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). Active development happens on the `dev` branch; `main` is stable and is what gets published to the stores.
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Active development happens on the `dev` branch; `main` is branch-protected and is what gets published to the stores.
 
 ## License
 
