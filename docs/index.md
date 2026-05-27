@@ -7,6 +7,7 @@ taskbar, tabs, and other windows stay reachable.
 Free, open source (MIT), no ads, no tracking, no data collection.
 
 - **Firefox listing:** https://addons.mozilla.org/en-US/firefox/addon/window-fullscreen-for-youtube/
+- **Chrome listing:** https://chromewebstore.google.com/detail/window-fullscreen-for-you/jghckcdnmagoohfbjplpfjbnbkpfcekl
 - **Source:** https://github.com/MashdorDev/window-fullscreen-for-youtube
 - **Support:** [GitHub Sponsors](https://github.com/sponsors/MashdorDev) · [Ko-fi](https://ko-fi.com/dorzairidev)
 

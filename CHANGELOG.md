@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Chrome Web Store listing is now live and approved. README and docs link directly to the
+  store listing (and a Chrome Web Store version badge was added), replacing the
+  "submitted / pending review" note.
+
 ## [0.2.6] - 2026-05-26
 
 First AMO update since 0.2.3. The fixes tagged as 0.2.4 and 0.2.5 never reached the store — the old tag-based AMO upload ran with `continue-on-error: true` and failed silently. This release carries them to users.
