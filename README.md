@@ -44,7 +44,7 @@ Every feature is free, forever — no paywall, no subscription, no nag prompts. 
 
 **Firefox:** [Install from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/window-fullscreen-for-youtube/) — reviewed and listed on AMO.
 
-**Chrome:** Chrome Web Store submission in progress. Until it's live, load it unpacked (see below) or grab the `.zip` from [Releases](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest).
+**Chrome:** submitted to the Chrome Web Store and pending review — the store link will be added here once it's approved. In the meantime, load it unpacked (see below) or grab the `.zip` from [Releases](https://github.com/MashdorDev/window-fullscreen-for-youtube/releases/latest).
 
 ### Development install — Firefox
 
