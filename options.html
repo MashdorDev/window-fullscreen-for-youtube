@@ -56,6 +56,15 @@
       </label>
     </section>
 
+    <section>
+      <h2>Crash reports</h2>
+      <label class="row">
+        <span class="label">Send crash reports</span>
+        <input type="checkbox" id="errorReporting">
+      </label>
+      <p class="hint">Off by default. When on, a crash inside this extension sends the error message, the line it came from, and the last few things you did with the extension (toggled fullscreen, changed a setting) to a server the developer runs. It never includes the page address, the video, or anything you type. Nothing else is ever sent. <a href="https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/" target="_blank" rel="noopener">Privacy policy</a>.</p>
+    </section>
+
     <section class="actions">
       <button id="reset" type="button">Reset to defaults</button>
       <span id="status" class="status" aria-live="polite"></span>
@@ -87,6 +96,7 @@
     </section>
   </main>
 
+  <script src="errors.js"></script>
   <script src="options.js"></script>
 </body>
 </html>

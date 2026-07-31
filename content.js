@@ -15,6 +15,9 @@
   const MENU_ITEM_CLASS = 'wfs-menuitem';
   const MIN_CHAT_WIDTH = 280;
   const LOG = (...a) => console.log('[WFS]', ...a);
+  const CRUMB = (category, message, data) => {
+    if (window.wfsCrumb) window.wfsCrumb(category, message, data);
+  };
 
   const DEFAULTS = {
     hotkey: 'Shift+F',
@@ -75,7 +78,10 @@
 
   function ensureTheaterMode(retries) {
     if (retries === undefined) retries = 15;
-    if (retries <= 0) return;
+    if (retries <= 0) {
+      CRUMB('youtube', 'theater mode never engaged');
+      return;
+    }
     if (isInTheaterMode()) return;
     clickTheaterButton();
     setTimeout(() => {
@@ -101,6 +107,7 @@
 
   function saveSetting(key, value) {
     settings[key] = value;
+    CRUMB('settings', key, { value: value });
     try {
       chrome.storage.sync.set({ [key]: value });
     } catch (e) {
@@ -159,6 +166,10 @@
   }
 
   function setActive(on) {
+    CRUMB('ui', on ? 'enter windowed fullscreen' : 'exit windowed fullscreen', {
+      theater: isInTheaterMode(),
+      chat: isChatAvailable(),
+    });
     if (on) {
       initialTheaterState = isInTheaterMode();
       if (!initialTheaterState) ensureTheaterMode();
@@ -216,6 +227,7 @@
   function toggleChat() {
     const chat = getChatElement();
     if (!chat) return;
+    CRUMB('ui', 'toggle chat', { collapsed: chat.hasAttribute('collapsed') });
     const nativeBtn =
       chat.querySelector('#show-hide-button button') ||
       chat.querySelector('#show-hide-button [role="button"]') ||
@@ -301,6 +313,7 @@
     if (theaterObserver) theaterObserver.disconnect();
     theaterObserver = new MutationObserver(() => {
       if (isActive() && !isInTheaterMode()) {
+        CRUMB('youtube', 'theater mode dropped, exiting');
         setActive(false);
       }
     });
@@ -463,7 +476,10 @@
     if (!video || !video.src) return;
     if (video.src === lastAutoSrc) return;
     lastAutoSrc = video.src;
-    if (!isActive()) setActive(true);
+    if (!isActive()) {
+      CRUMB('ui', 'auto-enter on new video');
+      setActive(true);
+    }
   }
 
   const NON_STICKY_SECONDARY_PROPS = ['width', 'min-width', 'max-width', 'flex', 'position', 'display'];
@@ -577,6 +593,8 @@
   }
 
   window.addEventListener('yt-navigate-finish', () => {
+    // Deliberately no URL — which video is being watched is none of our business.
+    CRUMB('navigation', 'yt-navigate-finish', { watchPage: isWatchPage() });
     lastAutoSrc = null;
     if (!isWatchPage() && isActive()) {
       setActive(false);
