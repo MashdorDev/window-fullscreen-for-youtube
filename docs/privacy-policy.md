@@ -81,10 +81,10 @@ can also revoke it under `about:addons` → this extension → Permissions and d
 
 ## Permissions
 
-- **storage** — to save your settings locally (described above).
-- **Access to `www.youtube.com`** — so the extension runs only on YouTube and can
+- **storage**: to save your settings locally (described above).
+- **Access to `www.youtube.com`**: so the extension runs only on YouTube and can
   modify the player layout there. It runs on no other website.
-- **Technical and interaction data** (optional, Firefox) — only requested if you
+- **Technical and interaction data** (optional, Firefox): only requested if you
   turn on breakage reports, and revocable at any time.
 
 ## Data sharing
