@@ -12,11 +12,11 @@ page.
 | `content.js` | The entire in-page behavior (see below). Injected on `www.youtube.com` at `document_idle`. |
 | `content.css` | All layout/visibility rules, keyed off classes the script sets on `<html>`. |
 | `options.html` / `options.css` / `options.js` | The settings UI, shown both as the toolbar popup and the options page. Reads/writes `chrome.storage.sync`. |
-| `errors.js` | Opt-in crash reporting. Runs in both the content script and the options page, installs the `error`/`unhandledrejection` handlers, keeps the breadcrumb ring buffer, and builds the payload. Exposes `window.wfsCrumb` for `content.js`. |
+| `errors.js` | Opt-in breakage reporting. Runs in both the content script and the options page, keeps the breadcrumb ring buffer, and builds the payload. Exposes `window.wfsReport` (health signals) and `window.wfsCrumb` for `content.js`, and installs the `error`/`unhandledrejection` handlers for the secondary exception path. |
 | `background.js` | Event page (Firefox) / service worker (Chrome). Re-checks consent and POSTs the Sentry envelope to GlitchTip. |
 | `icons/` | 16/32/48/128 px PNGs. |
 
-### Why crash reporting is split across two files
+### Why reporting is split across two files
 
 `chrome.permissions` is not exposed to content scripts, so the Firefox
 data-collection grant cannot be verified there, and a `fetch` issued from a
@@ -27,9 +27,24 @@ content script is subject to YouTube's CSP. Both problems go away by having
 The reporter is hand-rolled rather than `@sentry/browser`: GlitchTip accepts the
 Sentry envelope format over plain `fetch`, and the SDK would drag a build step
 into a repo that has none. Guard rails live in `errors.js`: five events per page
-load, identical errors sent once, page stack frames dropped, and the
+load, identical reports sent once, page stack frames dropped, and the
 `moz-extension://<uuid>` prefix stripped from filenames because it is generated
 per install and identifies a device.
+
+### The health check
+
+Exceptions are the wrong thing to watch for here. Every YouTube lookup in
+`content.js` is guarded (`if (!controls) return;`), so a renamed class produces a
+silent no-op, not a throw. `runHealthCheck()` closes that gap: 15s after each
+watch-page navigation it re-runs the `SEL` selectors, confirms the injected button
+exists and has non-zero width, and confirms the gear-menu items are still in the
+settings panel when that panel exists. Anything that fails is reported by name,
+fingerprinted so one YouTube change groups into one issue.
+
+It defers (up to four times) rather than reporting while an ad is playing, while
+the tab is hidden, or before the `video` element exists, since none of those mean
+YouTube changed. `ensureTheaterMode` reports `theaterModeFailed` separately when
+the size button is still present but clicking it no longer produces theater mode.
 
 ## How state works
 

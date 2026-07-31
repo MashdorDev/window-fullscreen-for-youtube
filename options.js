@@ -9,12 +9,12 @@
     hideMasthead: true,
     hideSidebar: true,
     hideComments: true,
-    errorReporting: false,
+    healthReporting: false,
   };
 
   const DATA_PERMISSION = 'technicalAndInteraction';
 
-  // errorReporting is deliberately absent — it needs a permission round-trip,
+  // healthReporting is deliberately absent — it needs a permission round-trip,
   // so it can't ride the plain save-on-change path below.
   const CHECKBOX_KEYS = [
     'autoToggle',
@@ -28,7 +28,7 @@
   const hotkeyInput = document.getElementById('hotkey');
   const resetBtn = document.getElementById('reset');
   const statusEl = document.getElementById('status');
-  const errorReportingEl = document.getElementById('errorReporting');
+  const healthReportingEl = document.getElementById('healthReporting');
 
   function showStatus(msg) {
     statusEl.textContent = msg;
@@ -55,7 +55,7 @@
         const el = document.getElementById(key);
         if (el) el.checked = !!settings[key];
       }
-      errorReportingEl.checked = !!settings.errorReporting && (await hasDataConsent());
+      healthReportingEl.checked = !!settings.healthReporting && (await hasDataConsent());
     });
   }
 
@@ -75,8 +75,8 @@
     el.addEventListener('change', () => save({ [key]: el.checked }));
   }
 
-  errorReportingEl.addEventListener('change', async () => {
-    const on = errorReportingEl.checked;
+  healthReportingEl.addEventListener('change', async () => {
+    const on = healthReportingEl.checked;
     // Firefox shows its own consent prompt for technical data. Chrome doesn't
     // know the key and rejects, which is fine: there the checkbox is consent.
     try {
@@ -84,14 +84,14 @@
         ? await chrome.permissions.request({ data_collection: [DATA_PERMISSION] })
         : await chrome.permissions.remove({ data_collection: [DATA_PERMISSION] });
       if (on && !changed) {
-        errorReportingEl.checked = false;
+        healthReportingEl.checked = false;
         showStatus('Permission declined');
         return;
       }
     } catch (e) {
       // Browser has no data-collection permissions; fall through to the toggle.
     }
-    save({ errorReporting: on });
+    save({ healthReporting: on });
   });
 
   resetBtn.addEventListener('click', () => {
@@ -106,8 +106,8 @@
     for (const k in changes) {
       if (k === 'hotkey') {
         hotkeyInput.value = changes.hotkey.newValue || DEFAULTS.hotkey;
-      } else if (k === 'errorReporting') {
-        errorReportingEl.checked = !!changes.errorReporting.newValue;
+      } else if (k === 'healthReporting') {
+        healthReportingEl.checked = !!changes.healthReporting.newValue;
       } else if (CHECKBOX_KEYS.includes(k)) {
         const el = document.getElementById(k);
         if (el) el.checked = !!changes[k].newValue;

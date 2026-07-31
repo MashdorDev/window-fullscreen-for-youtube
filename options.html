@@ -57,12 +57,12 @@
     </section>
 
     <section>
-      <h2>Crash reports</h2>
+      <h2>Breakage reports</h2>
       <label class="row">
-        <span class="label">Send crash reports</span>
-        <input type="checkbox" id="errorReporting">
+        <span class="label">Tell the developer when YouTube breaks this</span>
+        <input type="checkbox" id="healthReporting">
       </label>
-      <p class="hint">Off by default. When on, a crash inside this extension sends the error message, the line it came from, and the last few things you did with the extension (toggled fullscreen, changed a setting) to a server the developer runs. It never includes the page address, the video, or anything you type. Nothing else is ever sent. <a href="https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/" target="_blank" rel="noopener">Privacy policy</a>.</p>
+      <p class="hint">Off by default. YouTube changes its player often, and when it does the button can silently stop appearing. With this on, the extension notices that it stopped working and reports which piece broke, so it can be fixed before you have to go looking for a fix. The report is a short list of internal YouTube element names, plus the extension version and the last few things you did with the extension. It never includes the page address, the video, or anything you type. <a href="https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/" target="_blank" rel="noopener">Privacy policy</a>.</p>
     </section>
 
     <section class="actions">

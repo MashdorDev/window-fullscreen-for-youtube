@@ -1,5 +1,10 @@
-// Opt-in crash reporting. Loaded before content.js and options.js so that
+// Opt-in health reporting. Loaded before content.js and options.js so that
 // anything thrown during their startup is still caught.
+//
+// The signal this exists for is `reportSignal`: YouTube renaming a class breaks
+// the extension without throwing anything, so content.js checks its own
+// selectors and reports what stopped matching. `reportException` is the
+// secondary path, for the rarer case where our code actually throws.
 //
 // This file only builds the payload — background.js decides whether consent is
 // still valid and does the actual send.
@@ -57,16 +62,38 @@
     return typeof stack === 'string' && stack.includes(ORIGIN);
   }
 
-  function report(err) {
-    if (!enabled || sent >= MAX_EVENTS) return;
-    const type = err.name || 'Error';
-    const value = String(err.message || err).slice(0, 500);
-    const key = type + ':' + value;
-    if (seen.has(key)) return;
+  function emit(key, event) {
+    if (!enabled || sent >= MAX_EVENTS || seen.has(key)) return;
     seen.add(key);
     sent += 1;
+    event.tags = Object.assign({ surface: SURFACE }, event.tags);
+    event.breadcrumbs = { values: crumbs.slice() };
+    try {
+      const p = chrome.runtime.sendMessage({ type: 'wfs-event', event: event });
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    } catch (e) {
+      // Extension context goes away mid-update; a lost report is fine.
+    }
+  }
 
-    const event = {
+  // `broken` is a list of names from content.js's own health check.
+  function reportSignal(broken) {
+    const list = broken.slice().sort();
+    emit('signal:' + list.join(','), {
+      level: 'warning',
+      message: { formatted: 'Health check failed: ' + list.join(', ') },
+      // Groups by what broke rather than by who reported it, so one YouTube
+      // change is one issue no matter how many users hit it.
+      fingerprint: ['selector-health'].concat(list),
+      tags: { signal: 'selector-health' },
+      extra: { broken: list },
+    });
+  }
+
+  function reportException(err) {
+    const type = err.name || 'Error';
+    const value = String(err.message || err).slice(0, 500);
+    emit(type + ':' + value, {
       level: 'error',
       exception: {
         values: [{
@@ -76,35 +103,27 @@
           mechanism: { type: 'onerror', handled: false },
         }],
       },
-      breadcrumbs: { values: crumbs.slice() },
-      tags: { surface: SURFACE },
-    };
-
-    try {
-      const p = chrome.runtime.sendMessage({ type: 'wfs-error', event: event });
-      if (p && typeof p.catch === 'function') p.catch(() => {});
-    } catch (e) {
-      // Extension context goes away mid-update; a lost crash report is fine.
-    }
+      tags: { signal: 'exception' },
+    });
   }
 
   // Content scripts share the page's window, so YouTube's own errors land here
   // too. The stack is what tells them apart.
   window.addEventListener('error', (event) => {
-    if (event.error && isOurs(event.error.stack)) report(event.error);
+    if (event.error && isOurs(event.error.stack)) reportException(event.error);
   }, true);
 
   window.addEventListener('unhandledrejection', (event) => {
-    if (event.reason && isOurs(event.reason.stack)) report(event.reason);
+    if (event.reason && isOurs(event.reason.stack)) reportException(event.reason);
   });
 
   try {
-    chrome.storage.sync.get({ errorReporting: false }, (s) => {
-      enabled = !!s.errorReporting;
+    chrome.storage.sync.get({ healthReporting: false }, (s) => {
+      enabled = !!s.healthReporting;
     });
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area === 'sync' && changes.errorReporting) {
-        enabled = !!changes.errorReporting.newValue;
+      if (area === 'sync' && changes.healthReporting) {
+        enabled = !!changes.healthReporting.newValue;
       }
     });
   } catch (e) {
@@ -112,4 +131,5 @@
   }
 
   window.wfsCrumb = crumb;
+  window.wfsReport = reportSignal;
 })();

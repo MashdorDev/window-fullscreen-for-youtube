@@ -19,6 +19,17 @@
     if (window.wfsCrumb) window.wfsCrumb(category, message, data);
   };
 
+  // Every YouTube selector the extension leans on, in one place so the health
+  // check below and the code that uses them cannot drift apart.
+  const SEL = {
+    rightControls: '.ytp-right-controls',
+    fullscreenButton: '.ytp-fullscreen-button',
+    sizeButton: '.ytp-size-button',
+    settingsPanel: '.ytp-settings-menu .ytp-panel-menu',
+    watchContainer: 'ytd-watch-flexy, ytd-watch-grid, ytd-watch, #player',
+    video: 'video.html5-main-video',
+  };
+
   const DEFAULTS = {
     hotkey: 'Shift+F',
     autoToggle: false,
@@ -60,10 +71,7 @@
   }
 
   function getWatchContainer() {
-    return document.querySelector('ytd-watch-flexy') ||
-           document.querySelector('ytd-watch-grid') ||
-           document.querySelector('ytd-watch') ||
-           document.querySelector('#player');
+    return document.querySelector(SEL.watchContainer);
   }
 
   function isInTheaterMode() {
@@ -72,14 +80,18 @@
   }
 
   function clickTheaterButton() {
-    const btn = document.querySelector('.ytp-size-button');
+    const btn = document.querySelector(SEL.sizeButton);
     if (btn) btn.click();
   }
 
   function ensureTheaterMode(retries) {
     if (retries === undefined) retries = 15;
     if (retries <= 0) {
+      // The size button is still there but clicking it no longer produces
+      // theater mode, which breaks the whole feature just as thoroughly.
+      LOG('health check failed: theaterModeFailed');
       CRUMB('youtube', 'theater mode never engaged');
+      if (window.wfsReport) window.wfsReport(['theaterModeFailed']);
       return;
     }
     if (isInTheaterMode()) return;
@@ -204,10 +216,10 @@
 
   function injectButton() {
     if (isAdPlaying()) return;
-    const controls = document.querySelector('.ytp-right-controls');
+    const controls = document.querySelector(SEL.rightControls);
     if (!controls) return;
     if (controls.querySelector('#' + BUTTON_ID)) return;
-    const fullscreenBtn = controls.querySelector('.ytp-fullscreen-button');
+    const fullscreenBtn = controls.querySelector(SEL.fullscreenButton);
     const btn = createButton();
     if (fullscreenBtn && fullscreenBtn.parentNode) {
       fullscreenBtn.parentNode.insertBefore(btn, fullscreenBtn);
@@ -261,10 +273,10 @@
     }
     if (existing) return;
     if (isAdPlaying()) return;
-    const controls = document.querySelector('.ytp-right-controls');
+    const controls = document.querySelector(SEL.rightControls);
     if (!controls) return;
     const wfsBtn = controls.querySelector('#' + BUTTON_ID);
-    const anchor = wfsBtn || controls.querySelector('.ytp-fullscreen-button');
+    const anchor = wfsBtn || controls.querySelector(SEL.fullscreenButton);
     if (anchor && anchor.parentNode) {
       anchor.parentNode.insertBefore(createChatButton(), anchor);
     } else {
@@ -452,7 +464,7 @@
   }
 
   function injectMenuItems() {
-    const panel = document.querySelector('.ytp-settings-menu .ytp-panel-menu');
+    const panel = document.querySelector(SEL.settingsPanel);
     if (!panel) return;
     if (panel.querySelector('.' + MENU_ITEM_CLASS)) return;
     for (const cfg of MENU_ITEMS) {
@@ -472,7 +484,7 @@
   let lastAutoSrc = null;
   function maybeAutoToggle() {
     if (!settings.autoToggle) return;
-    const video = document.querySelector('video.html5-main-video');
+    const video = document.querySelector(SEL.video);
     if (!video || !video.src) return;
     if (video.src === lastAutoSrc) return;
     lastAutoSrc = video.src;
@@ -533,6 +545,51 @@
         NON_STICKY_CHAT_PROPS.forEach((p) => chat.style.removeProperty(p));
       }
     }
+  }
+
+  // YouTube renaming a class does not throw. Every lookup above is guarded and
+  // simply returns early, so the extension goes quiet instead of breaking
+  // loudly. This is the only thing that notices.
+  const HEALTH_DELAY_MS = 15000;
+  const HEALTH_MAX_DEFERRALS = 4;
+  const HEALTH_SELECTORS = ['rightControls', 'fullscreenButton', 'sizeButton', 'watchContainer'];
+  let healthTimer = null;
+  let healthDeferrals = 0;
+
+  function scheduleHealthCheck() {
+    clearTimeout(healthTimer);
+    healthDeferrals = 0;
+    healthTimer = setTimeout(runHealthCheck, HEALTH_DELAY_MS);
+  }
+
+  function runHealthCheck() {
+    // An ad swaps out the control bar and a background tab may never lay the
+    // player out at all. Neither means YouTube changed, so wait instead.
+    const settled = isWatchPage() && !isAdPlaying() &&
+      document.visibilityState === 'visible' &&
+      !!document.querySelector(SEL.video);
+    if (!settled) {
+      if (healthDeferrals++ < HEALTH_MAX_DEFERRALS) {
+        healthTimer = setTimeout(runHealthCheck, HEALTH_DELAY_MS);
+      }
+      return;
+    }
+
+    const broken = HEALTH_SELECTORS.filter((name) => !document.querySelector(SEL[name]));
+
+    const btn = document.getElementById(BUTTON_ID);
+    if (!btn) broken.push('buttonNotInjected');
+    else if (btn.getBoundingClientRect().width === 0) broken.push('buttonInvisible');
+
+    // Only checkable once YouTube has actually built the settings panel, which
+    // it does lazily. Absent panel means "unknown", not "broken".
+    const panel = document.querySelector(SEL.settingsPanel);
+    if (panel && !panel.querySelector('.' + MENU_ITEM_CLASS)) broken.push('menuItemsNotInjected');
+
+    if (!broken.length) return;
+    LOG('health check failed:', broken.join(', '));
+    CRUMB('health', 'check failed', { broken: broken.join(',') });
+    if (window.wfsReport) window.wfsReport(broken);
   }
 
   let pending = false;
@@ -596,6 +653,7 @@
     // Deliberately no URL — which video is being watched is none of our business.
     CRUMB('navigation', 'yt-navigate-finish', { watchPage: isWatchPage() });
     lastAutoSrc = null;
+    if (isWatchPage()) scheduleHealthCheck();
     if (!isWatchPage() && isActive()) {
       setActive(false);
     }
@@ -610,5 +668,6 @@
   loadSettings().then(() => {
     LOG('settings loaded', settings);
     scheduleWork();
+    if (isWatchPage()) scheduleHealthCheck();
   });
 })();

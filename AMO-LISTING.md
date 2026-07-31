@@ -36,7 +36,7 @@ No paywall. No subscription. No nag prompts. Open source under MIT.
 
 This extension only accesses youtube.com. It stores settings in your browser's sync storage. Nothing is collected or sold.
 
-Crash reports are the one exception, and they are off until you turn them on. If you do, an error inside the extension sends its message, the line it came from, and the last few extension actions to a server the developer runs. It never includes the page address, the video, or anything you type. You can revoke it at any time under about:addons.
+Breakage reports are the one exception, and they are off until you turn them on. YouTube changes its player often, and when it does this extension can stop working silently. With the setting on, it notices and reports which piece broke, so it can be fixed quickly. The report is a list of internal YouTube element names plus the last few extension actions. It never includes the page address, the video, or anything you type. You can revoke it at any time under about:addons.
 
 ### Source code
 
