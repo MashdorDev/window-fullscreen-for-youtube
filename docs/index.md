@@ -4,7 +4,8 @@ Watch YouTube in true **windowed fullscreen** — fill your entire browser windo
 edge to edge, without switching the operating system into native fullscreen. Your
 taskbar, tabs, and other windows stay reachable.
 
-Free, open source (MIT), no ads, no tracking, no data collection.
+Free, open source (MIT), no ads, no tracking. Nothing is collected unless you
+switch on crash reports, which are off by default.
 
 - **Firefox listing:** https://addons.mozilla.org/en-US/firefox/addon/window-fullscreen-for-youtube/
 - **Chrome listing:** https://chromewebstore.google.com/detail/window-fullscreen-for-you/jghckcdnmagoohfbjplpfjbnbkpfcekl

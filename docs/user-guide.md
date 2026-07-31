@@ -47,4 +47,6 @@ Use **Reset to defaults** to restore everything.
 
 - Works on watch pages, live streams (`/live/`), and clips.
 - The chat button only appears when a stream/premiere has live chat.
-- Nothing leaves your device — see the Privacy Policy.
+- Nothing leaves your device unless you turn on **Send crash reports** in the
+  settings popup, which is off by default. See the Privacy Policy for exactly
+  what a report contains.
