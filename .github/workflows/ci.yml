@@ -149,19 +149,34 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: web-ext sign --channel=unlisted
+      # deploy-firefox already signed this version on the listed channel, and AMO
+      # allows a version number to exist exactly once per add-on regardless of
+      # channel. Signing it again as unlisted returns "Version X already exists"
+      # and fails the job, which is why v0.2.6 never got a GitHub Release. Reuse
+      # the file the listed submission produced instead: it is the same signed
+      # .xpi users get from AMO.
+      - name: Fetch the AMO-signed .xpi
         env:
-          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
-          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+          VERSION: ${{ needs.detect-version.outputs.version }}
         run: |
-          if [ -z "$AMO_JWT_ISSUER" ] || [ -z "$AMO_JWT_SECRET" ]; then
-            echo "::warning::AMO credentials not set; skipping unlisted sign."
-            exit 0
-          fi
-          npx --yes web-ext sign \
-            --api-key="$AMO_JWT_ISSUER" \
-            --api-secret="$AMO_JWT_SECRET" \
-            --channel=unlisted
+          mkdir -p web-ext-artifacts
+          ADDON=$(python3 -c "import json;print(json.load(open('manifest.json'))['browser_specific_settings']['gecko']['id'])")
+          API="https://addons.mozilla.org/api/v5/addons/addon/$ADDON/"
+          for i in $(seq 1 40); do
+            body=$(curl -sS "$API" || true)
+            live=$(printf '%s' "$body" | python3 -c "import sys,json;print(json.load(sys.stdin)['current_version']['version'])" 2>/dev/null || true)
+            if [ "$live" = "$VERSION" ]; then
+              url=$(printf '%s' "$body" | python3 -c "import sys,json;print(json.load(sys.stdin)['current_version']['file']['url'])")
+              curl -sSL --fail -o "web-ext-artifacts/window_fullscreen_for_youtube-$VERSION.xpi" "$url"
+              echo "attached the AMO-signed .xpi for $VERSION"
+              exit 0
+            fi
+            echo "AMO still serving '${live:-unknown}', waiting for $VERSION ($i/40)"
+            sleep 15
+          done
+          # The store deploy already succeeded by this point, so a missing
+          # installer is worth shouting about but not worth failing the release.
+          echo "::warning::AMO did not serve $VERSION within 10 minutes; publishing the release without the signed .xpi"
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
