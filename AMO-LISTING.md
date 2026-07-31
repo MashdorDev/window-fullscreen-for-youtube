@@ -34,7 +34,9 @@ No paywall. No subscription. No nag prompts. Open source under MIT.
 
 ### Privacy
 
-This extension only accesses youtube.com. It stores settings in your browser's sync storage. It does not collect, transmit, or sell any data.
+This extension only accesses youtube.com. It stores settings in your browser's sync storage. Nothing is collected or sold.
+
+Breakage reports are the one exception, and they are off until you turn them on. YouTube changes its player often, and when it does this extension can stop working silently. With the setting on, it notices and reports which piece broke, so it can be fixed quickly. The report is a list of internal YouTube element names plus the last few extension actions. It never includes the page address, the video, or anything you type. You can revoke it at any time under about:addons.
 
 ### Source code
 
@@ -71,24 +73,10 @@ For AMO requirements:
 
 ## Privacy policy
 
-If AMO requires a privacy policy link, host this short text on GitHub Pages or similar:
-
-```
-Privacy Policy — Window Fullscreen for YouTube
-
-This extension does not collect, transmit, or sell any personal data.
-
-It accesses only www.youtube.com to inject its windowed-fullscreen functionality.
-Settings (hotkey, toggles, chat width) are stored using your browser's sync
-storage, which syncs across your own devices when you are signed in. We do
-not have access to this data.
-
-The extension makes no network requests of its own. It does not contact any
-analytics services, advertising networks, or third-party servers.
-
-Source code: https://github.com/MashdorDev/window-fullscreen-for-youtube
-License: MIT
-```
+The canonical policy is `docs/privacy-policy.md`, published at
+https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/ — that is the
+URL both store listings point at. Keep the two in sync; the live page has to be
+updated separately (see `docs/release-and-ci.md`), it does not follow the repo.
 
 ## Submission checklist
 

@@ -7,7 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-31
+
+### Added
+- **Opt-in breakage reporting**, off by default, behind a new "Tell the developer when
+  YouTube breaks this" toggle. YouTube changes its player markup regularly, and when it
+  does the extension fails silently: every DOM lookup is guarded, so a renamed class makes
+  the button quietly stop appearing rather than throw. A health check now runs 15s after
+  each watch-page navigation, verifies the selectors the extension depends on plus the
+  button it injected, and reports which ones stopped holding. Deferred while an ad is
+  playing, while the tab is hidden, or before the player has mounted, so a slow load is
+  never mistaken for breakage.
+- Reports go to a self-hosted GlitchTip (`glitchtip.dorzairi.com`) and are fingerprinted by
+  what broke, so one YouTube change is one issue no matter how many users hit it. Firefox
+  additionally gates the whole thing behind the built-in `technicalAndInteraction` consent,
+  revocable in `about:addons`. No page URL, video ID, typed text, or IP address is included,
+  and the per-install extension origin is stripped from stack frames because it identifies
+  a device.
+- Exceptions thrown by the extension's own code are reported through the same path as a
+  secondary signal. Implemented as ~130 lines in `errors.js` + `background.js`; no SDK, no
+  build step, no new runtime dependency.
+- Background event page / service worker (`background.js`). It owns the consent check, since
+  `chrome.permissions` is not reachable from a content script, and it makes the network call
+  from the extension origin so YouTube's CSP does not apply.
+
 ### Changed
+- Every YouTube selector the extension relies on now lives in one `SEL` map in `content.js`,
+  so the health check and the code being checked cannot drift apart.
+- `data_collection_permissions` now declares `optional: ["technicalAndInteraction"]`.
+  `required` stays `["none"]`, so existing installs get no new permission prompt on update.
+- Privacy policy rewritten to describe breakage reporting, what a report contains, what it
+  never contains, and both ways to turn it off.
 - Chrome Web Store listing is now live and approved. README and docs link directly to the
   store listing (and a Chrome Web Store version badge was added), replacing the
   "submitted / pending review" note.
