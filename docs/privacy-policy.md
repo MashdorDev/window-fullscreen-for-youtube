@@ -8,8 +8,9 @@ extension that adds a windowed-fullscreen mode to the YouTube video player.
 ## Summary
 
 The extension collects nothing unless you switch on breakage reports, which are
-off by default. There is no analytics, no tracking, no advertising, and nothing
-is ever sold or shared.
+off by default and were added in version 0.3.0. Versions before that make no
+network requests at all. There is no analytics, no tracking, no advertising, and
+nothing is ever sold or shared.
 
 ## What data the extension handles
 
@@ -28,7 +29,7 @@ are signed into your browser, it may sync these settings across your own devices
 your browser account. This data stays within your browser/account: the developer
 never receives it and has no access to it.
 
-### Breakage reports (off by default, opt-in)
+### Breakage reports (version 0.3.0 and later, off by default, opt-in)
 
 YouTube changes its player markup regularly. When it does, this extension can stop
 working without any visible error: the button simply never appears. If you turn on
