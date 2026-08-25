@@ -1,6 +1,6 @@
 # Privacy Policy — Window Fullscreen for YouTube
 
-_Last updated: 31 July 2026_
+_Last updated: 25 August 2026_
 
 Window Fullscreen for YouTube ("the extension") is a free, open-source browser
 extension that adds a windowed-fullscreen mode to the YouTube video player.
@@ -29,8 +29,8 @@ are signed into your browser, it may sync these settings across your own devices
 your browser account. This data stays within your browser/account: the developer
 never receives it and has no access to it.
 
-One further thing is stored, and it is not a setting: **the extension version you last
-opened the settings popup on**. It is what decides whether to show you the "what's new"
+One further thing is stored, and it is not a setting (version 0.4.0 and later): **the
+extension version you last opened the settings popup on**. It is what decides whether to show you the "what's new"
 notice after an update, and it is kept with `storage.local` rather than `storage.sync`,
 so it never leaves the browser it was written in, not even to your own other devices.
 It is a version number and nothing else.
