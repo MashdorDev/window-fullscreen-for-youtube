@@ -11,5 +11,11 @@ module.exports = {
     'docs/**',
     'Assets',
     'Assets/**',
+    'test',
+    'test/**',
+    'tools',
+    'tools/**',
+    'package.json',
+    'package-lock.json',
   ],
 };
