@@ -29,6 +29,12 @@ are signed into your browser, it may sync these settings across your own devices
 your browser account. This data stays within your browser/account: the developer
 never receives it and has no access to it.
 
+One further thing is stored, and it is not a setting: **the extension version you last
+opened the settings popup on**. It is what decides whether to show you the "what's new"
+notice after an update, and it is kept with `storage.local` rather than `storage.sync`,
+so it never leaves the browser it was written in, not even to your own other devices.
+It is a version number and nothing else.
+
 ### Breakage reports (version 0.3.0 and later, off by default, opt-in)
 
 YouTube changes its player markup regularly. When it does, this extension can stop
@@ -81,7 +87,8 @@ can also revoke it under `about:addons` → this extension → Permissions and d
 
 ## Permissions
 
-- **storage**: to save your settings locally (described above).
+- **storage**: to save your settings, and the version you last saw the update notice on,
+  locally (described above).
 - **Access to `www.youtube.com`**: so the extension runs only on YouTube and can
   modify the player layout there. It runs on no other website.
 - **Technical and interaction data** (optional, Firefox): only requested if you

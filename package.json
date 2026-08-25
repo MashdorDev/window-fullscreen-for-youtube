@@ -1,0 +1,13 @@
+{
+  "name": "window-fullscreen-for-youtube",
+  "private": true,
+  "type": "commonjs",
+  "description": "Repo tooling only. The extension itself has no dependencies and no build step; this file exists so `node --test` resolves module semantics from the repo instead of inheriting them from a parent directory.",
+  "scripts": {
+    "test": "node --test",
+    "lint": "web-ext lint",
+    "build": "web-ext build --overwrite-dest",
+    "start:firefox": "web-ext run",
+    "capture": "node tools/capture.mjs"
+  }
+}

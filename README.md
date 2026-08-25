@@ -30,13 +30,15 @@ Built for ultrawide and dual-monitor users who lose real estate to YouTube's let
 ## Features
 
 - **Native player button** in YouTube's own control bar — not a toolbar popup, not a floating widget
-- **Configurable hotkey** (default `Shift+F`), `Esc` to exit
+- **Rebindable hotkey** (default `Shift+F`): click the key in the popup and press a new one. `Esc` to exit
 - **Auto-toggle** on new video (optional)
 - **Scrollable mode** — keep scrolling past the player to reach comments and related videos
 - **Granular page-chrome hiding** — toggle masthead, sidebar, comments independently
 - **Hover-to-reveal masthead** — search bar fades in when you move the cursor to the top edge
 - **Live chat side-panel** — dedicated chat toggle button on live/post-live videos with a draggable resize handle. Choose sticky chat (always pinned to right) or non-sticky (scrolls with the page)
-- **Native YouTube integration** — three toggles inside YouTube's gear menu, styled to match
+- **Native YouTube integration** — a "Window fullscreen" entry in YouTube's own gear menu, opening a panel built from YouTube's markup
+- **Release notes in the popup** — a dot on the toolbar icon after an update, the highlights for the versions you missed, and every past release under a collapsible section
+- **Follows your system light/dark preference**, with visible focus rings throughout
 - **Smooth transitions** that respect `prefers-reduced-motion`
 
 Every feature is free, forever — no paywall, no subscription, no nag prompts. Open source (MIT). Zero runtime dependencies, no build step.
@@ -76,7 +78,7 @@ The incumbent extension (YouTube Windowed FullScreen by navi.jador) pioneered th
 
 ## Settings
 
-Open settings by clicking the toolbar icon (after pinning the extension), or use the three toggles directly inside YouTube's gear menu:
+Open settings by clicking the toolbar icon (after pinning the extension), or use the **Window fullscreen** entry inside YouTube's gear menu for the common toggles:
 
 | Setting | Default | Description |
 |---|---|---|
@@ -85,8 +87,9 @@ Open settings by clicking the toolbar icon (after pinning the extension), or use
 | `scrollableMode` | off | Allow scrolling beneath the player to reach comments |
 | `stickyChat` | on | Pin chat to the right edge (live videos); off = chat scrolls with page |
 | `hideMasthead` | on | Hide YouTube's top bar (hover to reveal) |
-| `hideSidebar` | on | Hide related videos sidebar (ignored on live videos so the chat stays accessible) |
+| `hideSidebar` | on | Hide related videos sidebar. Stays visible while live chat is open, since chat lives in that column; hides again once you close chat |
 | `hideComments` | on | Hide comments (ignored in scrollable mode) |
+| `healthReporting` | off | Opt-in breakage reports when a YouTube change stops the extension working |
 
 ## Support
 

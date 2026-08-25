@@ -15,13 +15,15 @@ visible and clickable. It's the "cinema, but not full takeover" middle ground.
 
 ## Options
 
-Open the options from the toolbar icon, or via YouTube's player **gear menu** (the most
-common toggles appear there too). Settings sync across your signed-in browsers.
+Open the options from the toolbar icon, or via YouTube's player **gear menu**, where a
+**Window fullscreen** entry opens a panel with the most common toggles. Settings sync
+across your signed-in browsers.
 
 ### Hotkey
 
-Set any combination, e.g. `Shift+F`, `Ctrl+Alt+W`. Modifiers: `Shift`, `Ctrl`, `Alt`,
-`Meta`. `Esc` always exits.
+Click the key shown next to **Toggle hotkey**, then press the combination you want, the
+way you would rebind a key in a game. `Esc` cancels the rebind. `Tab` and `Space` are not
+accepted, and `Esc` always exits windowed fullscreen.
 
 ### Behavior
 
@@ -38,10 +40,23 @@ Set any combination, e.g. `Shift+F`, `Ctrl+Alt+W`. Modifiers: `Shift`, `Ctrl`, `
 Granular control over what disappears in windowed fullscreen:
 
 - **Masthead (top bar)** — hidden by default; move the mouse to the very top to reveal it.
+  It hides again when you move back down, or shortly after the pointer leaves the page
+  entirely. Focus is respected: if you clicked into the search box, it stays put.
 - **Sidebar (related videos)**
 - **Comments**
 
 Use **Reset to defaults** to restore everything.
+
+## After an update
+
+Extensions update themselves quietly, so when something changes the toolbar icon gets a
+small dot and the popup shows a short "what's new" covering the versions you missed. It
+appears once: opening the popup is enough to clear it, and the X closes it immediately.
+
+To read it again later, or to catch up on older releases, open **Release notes** near the
+bottom of the settings. It lists every version with what changed in it and marks the one
+you have installed. The link at the end goes to the complete changelog, including the
+internal changes that never surface here.
 
 ## Notes
 

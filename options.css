@@ -1,132 +1,336 @@
+/* The popup and the options page are the same document, so this has to work at
+   ~400px in a popup chrome and standing alone in a tab. Everything is driven by
+   the tokens below; the accent is the one colour the extension uses anywhere,
+   including the chat resize handle in content.css. */
+
 :root {
-  color-scheme: dark;
+  color-scheme: dark light;
+
+  --accent: #4da3ff;
+  --accent-soft: rgba(77, 163, 255, 0.14);
+
+  --bg: #141517;
+  --surface: #1c1e21;
+  --surface-hover: #23262a;
+  --border: #2c3036;
+  --border-strong: #3a3f47;
+
+  --text: #e9eaec;
+  --text-dim: #9aa0a8;
+  --text-faint: #6f757d;
+
+  --track: #33383f;
+  --knob: #8b929b;
+  --radius: 8px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --accent: #0b6bcb;
+    --accent-soft: rgba(11, 107, 203, 0.1);
+
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --surface-hover: #f2f4f7;
+    --border: #e2e5ea;
+    --border-strong: #ccd1d9;
+
+    --text: #1b1d21;
+    --text-dim: #5b6169;
+    --text-faint: #838a93;
+
+    --track: #d3d8de;
+    --knob: #ffffff;
+  }
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
-  padding: 24px;
-  min-width: 420px;
-  background: #1a1a1a;
-  color: #e8e8e8;
+  padding: 18px;
+  min-width: 400px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 main {
-  max-width: 520px;
+  max-width: 460px;
 }
 
+/* Header ------------------------------------------------------------------ */
+
 header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 h1 {
-  font-size: 18px;
-  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 3px;
 }
 
 .tagline {
-  color: #aaa;
+  color: var(--text-dim);
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
+}
+
+/* Cards ------------------------------------------------------------------- */
+
+section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 14px 12px;
+  margin-bottom: 10px;
 }
 
 h2 {
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #888;
-  margin: 20px 0 8px;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  margin: 12px 0 4px;
 }
 
-section {
-  margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #2a2a2a;
-}
-
-section:last-of-type {
-  border-bottom: none;
-}
+/* Rows -------------------------------------------------------------------- */
 
 .row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 0;
-  font-size: 14px;
+  gap: 14px;
+  /* Negative margin so the hover state bleeds to the card edge while the text
+     stays aligned with the section heading above it. */
+  margin: 0 -8px;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+label.row {
   cursor: pointer;
+}
+
+label.row:hover {
+  background: var(--surface-hover);
 }
 
 .row .label {
   flex: 1;
+  font-size: 13px;
 }
 
-input[type="text"] {
-  background: #2a2a2a;
-  color: #e8e8e8;
-  border: 1px solid #444;
-  border-radius: 4px;
-  padding: 6px 8px;
-  font-size: 14px;
-  font-family: monospace;
-  width: 160px;
-  text-align: right;
-}
-
-input[type="text"]:focus {
-  outline: none;
-  border-color: #4da3ff;
-}
-
-input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: #4da3ff;
-  cursor: pointer;
+.row-desc {
+  display: block;
+  color: var(--text-dim);
+  font-size: 11.5px;
+  margin-top: 2px;
 }
 
 .hint {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin: 4px 0 8px;
+}
+
+.hint a {
+  white-space: nowrap;
+}
+
+/* Controls ---------------------------------------------------------------- */
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  margin: 0;
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--track);
+  border: 1px solid transparent;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--knob);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--accent);
+}
+
+input[type="checkbox"]:checked::after {
+  transform: translateX(14px);
+  background: #fff;
+}
+
+/* Keycap, not a text field: the binding is recorded from a real key press, so
+   there is nothing here to type into. */
+.keybind {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  padding: 5px 10px;
+  min-width: 140px;
   font-size: 12px;
-  color: #888;
-  margin: 6px 0 0;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.keybind:hover {
+  border-color: var(--text-faint);
+}
+
+.keybind.recording {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.keybind.rejected {
+  border-color: #e5534b;
+  color: #e5534b;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 code {
-  background: #2a2a2a;
+  background: var(--accent-soft);
+  color: var(--text);
   padding: 1px 5px;
-  border-radius: 3px;
-  font-size: 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 }
+
+/* What's new -------------------------------------------------------------- */
+
+.whats-new {
+  border-color: var(--accent);
+  padding-top: 12px;
+}
+
+.whats-new-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.whats-new h2 {
+  margin: 0;
+  color: var(--accent);
+}
+
+.whats-new ul {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.whats-new li {
+  position: relative;
+  padding-left: 16px;
+  margin: 6px 0;
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+.whats-new li::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 7px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.whats-new-dismiss {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.whats-new-dismiss:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.whats-new-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11.5px;
+}
+
+/* Actions ----------------------------------------------------------------- */
 
 .actions {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding-top: 8px;
+  padding: 12px 14px;
 }
 
 #reset {
-  background: #2a2a2a;
-  color: #e8e8e8;
-  border: 1px solid #444;
-  border-radius: 4px;
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
   padding: 6px 12px;
-  font-size: 13px;
+  font-size: 12px;
+  font-family: inherit;
   cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 #reset:hover {
-  background: #333;
-  border-color: #555;
+  color: var(--text);
+  border-color: var(--text-faint);
 }
 
 .status {
-  color: #4da3ff;
-  font-size: 12px;
+  color: var(--accent);
+  font-size: 11.5px;
 }
 
+/* Links and support ------------------------------------------------------- */
+
 a {
-  color: #4da3ff;
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -134,51 +338,38 @@ a:hover {
   text-decoration: underline;
 }
 
-em {
-  color: #777;
-  font-style: normal;
-  font-size: 11px;
-}
-
-ul {
-  padding-left: 18px;
-  margin: 4px 0 0;
-}
-
-li {
-  margin: 4px 0;
-  font-size: 14px;
-}
-
 .support-links {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 6px;
+  margin-top: 10px;
 }
 
 .support-btn {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 14px;
+  padding: 8px 12px;
   border-radius: 6px;
-  background: #2a2a2a;
-  color: #e8e8e8;
-  text-decoration: none;
-  font-size: 13px;
+  background: transparent;
+  color: var(--text);
+  font-size: 12.5px;
   font-weight: 500;
-  border: 1px solid #3a3a3a;
-  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  border: 1px solid var(--border);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .support-btn:hover {
   text-decoration: none;
-  transform: translateY(-1px);
 }
 
 .support-btn svg {
   flex-shrink: 0;
+  color: var(--text-dim);
+}
+
+.support-btn:hover svg {
+  color: inherit;
 }
 
 .support-btn.sponsors:hover {
@@ -194,7 +385,100 @@ li {
 }
 
 .support-btn.github:hover {
-  background: #3a3a3a;
-  border-color: #555;
-  color: #fff;
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+/* Release notes -----------------------------------------------------------
+   Collapsed by default. A popup is capped at 800px tall before it starts
+   scrolling in a cramped box, and this list only grows with every release. */
+
+.changelog summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.changelog summary::-webkit-details-marker {
+  display: none;
+}
+
+.changelog summary h2 {
+  margin: 0;
+}
+
+.changelog summary h2::after {
+  content: "›";
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 13px;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+
+.changelog details[open] summary h2::after {
+  transform: rotate(90deg);
+}
+
+.changelog-current {
+  color: var(--text-faint);
+  font-size: 11px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.changelog h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 12px 0 2px;
+}
+
+.changelog h3 .changelog-badge {
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-left: 6px;
+}
+
+.changelog ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.changelog li {
+  position: relative;
+  padding-left: 14px;
+  margin: 4px 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.changelog li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 7px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+
+.changelog-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 11px;
 }

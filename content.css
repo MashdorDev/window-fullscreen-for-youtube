@@ -131,11 +131,20 @@ html.wfs-active ytd-watch-flexy {
   margin-top: 0 !important;
 }
 
+/* Sticky chat is fixed at 9990, and YouTube's masthead sits around 2020, so
+   without this the top bar comes back with its right-hand side (account,
+   notifications, Create) painted over by chat. Above the resize handle too.
+   The masthead covers the chat's header strip while it is up, which is what a
+   bar you summoned by reaching for it should do. */
+html.wfs-active #masthead-container,
+html.wfs-active ytd-masthead {
+  z-index: 9995 !important;
+}
+
 html.wfs-active.wfs-hide-masthead #masthead-container,
 html.wfs-active.wfs-hide-masthead ytd-masthead {
   opacity: 0 !important;
   pointer-events: none !important;
-  z-index: 2000 !important;
 }
 
 html.wfs-active.wfs-hide-masthead.wfs-masthead-revealed #masthead-container,
@@ -146,15 +155,15 @@ html.wfs-active.wfs-hide-masthead ytd-masthead:focus-within {
   pointer-events: auto !important;
 }
 
-html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-available) ytd-watch-flexy #secondary {
+html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #secondary {
   display: none !important;
 }
 
-html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-available) ytd-watch-flexy #columns {
+html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #columns {
   display: block !important;
 }
 
-html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-available) ytd-watch-flexy #primary {
+html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #primary {
   width: 100% !important;
   max-width: none !important;
   margin-right: 0 !important;

@@ -10,7 +10,7 @@ GitHub Release. No manual tag pushing.
 
 - Pull request required to merge (direct pushes rejected, admins included).
 - 0 required approvals — a solo maintainer can self-merge.
-- Required status checks: **Lint extension** and **Build .zip**.
+- Required status checks: **Unit tests**, **Lint extension**, and **Build .zip**.
 - Force-pushes and branch deletion disabled.
 
 Day-to-day work happens on `dev` / feature branches; releases are squash-merged into
@@ -20,8 +20,10 @@ Day-to-day work happens on `dev` / feature branches; releases are squash-merged 
 
 On every push and PR:
 
+- **Unit tests** — `npm test` (`node --test`).
 - **Lint extension** — `web-ext lint`.
-- **Build .zip** — `web-ext build`, uploaded as a workflow artifact.
+- **Build .zip** — `web-ext build`, uploaded as a workflow artifact. Needs both of the
+  above.
 
 On a push to `main` only:
 
