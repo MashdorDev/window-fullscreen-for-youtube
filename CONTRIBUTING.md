@@ -16,15 +16,17 @@
    ```
 2. Commit using [Conventional Commits](https://www.conventionalcommits.org/) — `feat:`,
    `fix:`, `chore:`, `docs:`, `ci:`, etc. One logical change per commit.
-3. Open a PR. **Lint extension** and **Build .zip** must pass (required checks).
+3. Open a PR. **Unit tests**, **Lint extension** and **Build .zip** must pass (required
+   checks).
 4. Squash-merge.
 
 ## CI
 
 GitHub Actions (`.github/workflows/ci.yml`) runs on every push and PR:
 
+- **Unit tests** — `npm test` (`node --test`), must pass.
 - **Lint extension** — `web-ext lint`, must be clean.
-- **Build .zip** — `web-ext build`, uploaded as a 14-day artifact.
+- **Build .zip** — `web-ext build`, uploaded as a 14-day artifact. Needs both above.
 
 On a push to `main`, a **version bump in `manifest.json`** triggers the deploy chain:
 
@@ -44,9 +46,18 @@ Secrets (Settings → Secrets and variables → Actions):
 ## Build locally
 
 ```sh
+npm test                              # node --test, no dependencies
 npx web-ext lint
 npx web-ext build --overwrite-dest
+npm run capture                       # regenerate docs/screenshots/<version>/
 ```
+
+## Releasing
+
+A release PR does four things: bump `version` in `manifest.json`, add the `CHANGELOG.md`
+entry, add a `whatsnew.js` entry if anything user-facing changed (that is what the popup
+shows), and run `npm run capture` **after** the bump so the screenshots are filed under
+the right version. Full detail in [docs/contributing.md](./docs/contributing.md).
 
 Output goes to `web-ext-artifacts/`. File ignore patterns live in `web-ext-config.cjs`
 (auto-loaded by web-ext — note the hyphen; `docs/` and `Assets/` are excluded from the
