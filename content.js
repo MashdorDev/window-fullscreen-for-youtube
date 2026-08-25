@@ -6,13 +6,15 @@
   const RESIZE_HANDLE_ID = 'wfs-chat-resize';
   const ACTIVE_CLASS = 'wfs-active';
   const SCROLLABLE_CLASS = 'wfs-scrollable';
-  const CHAT_AVAILABLE_CLASS = 'wfs-chat-available';
   const CHAT_VISIBLE_CLASS = 'wfs-chat-visible';
   const STICKY_CHAT_CLASS = 'wfs-sticky-chat';
   const HIDE_MASTHEAD_CLASS = 'wfs-hide-masthead';
   const HIDE_SIDEBAR_CLASS = 'wfs-hide-sidebar';
   const HIDE_COMMENTS_CLASS = 'wfs-hide-comments';
   const MENU_ITEM_CLASS = 'wfs-menuitem';
+  const MENU_ROW_CLASS = 'wfs-menurow';
+  const PANEL_CLASS = 'wfs-panel';
+  const PANEL_TITLE = 'Window fullscreen';
   const MIN_CHAT_WIDTH = 280;
   const LOG = (...a) => console.log('[WFS]', ...a);
   const CRUMB = (category, message, data) => {
@@ -25,7 +27,7 @@
     rightControls: '.ytp-right-controls',
     fullscreenButton: '.ytp-fullscreen-button',
     sizeButton: '.ytp-size-button',
-    settingsPanel: '.ytp-settings-menu .ytp-panel-menu',
+    settingsPanel: '.ytp-settings-menu .ytp-panel',
     watchContainer: 'ytd-watch-flexy, ytd-watch-grid, ytd-watch, #player',
     video: 'video.html5-main-video',
   };
@@ -169,8 +171,17 @@
     );
   }
 
+  // content.css animates the player width over 0.18s. YouTube sizes the video
+  // from the player box at the moment it handles the resize, so a single event
+  // fired mid-transition leaves the video at its old width with dead space
+  // beside it. Ping again once the layout has settled.
+  const LAYOUT_SETTLE_MS = 250;
+  let settleTimer = null;
+
   function notifyResize() {
     window.dispatchEvent(new Event('resize'));
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => window.dispatchEvent(new Event('resize')), LAYOUT_SETTLE_MS);
   }
 
   function isActive() {
@@ -191,6 +202,7 @@
       initialTheaterState = null;
     }
     document.documentElement.classList.toggle(ACTIVE_CLASS, on);
+    if (!on) revealMasthead(false);
     applySettings();
     notifyResize();
   }
@@ -285,14 +297,27 @@
   }
 
   function isChatVisible() {
+    if (!isActive()) return false;
     const chat = getChatElement();
-    return !!(chat && !chat.hasAttribute('collapsed') && isActive());
+    if (!chat || chat.hasAttribute('collapsed')) return false;
+    // Closing chat sets `collapsed` on most layouts but not all of them (chat
+    // replay on a finished stream just hides the frame), and nothing in
+    // content.css touches `display` on the frame, so this cannot latch on our
+    // own styles the way a width or height check would.
+    return getComputedStyle(chat).display !== 'none';
   }
 
+  let chatWasVisible = null;
   function updateChatVisibilityClass() {
     const html = document.documentElement;
-    html.classList.toggle(CHAT_AVAILABLE_CLASS, isChatAvailable());
-    html.classList.toggle(CHAT_VISIBLE_CLASS, isChatVisible());
+    const visible = isChatVisible();
+    html.classList.toggle(CHAT_VISIBLE_CLASS, visible);
+    if (visible === chatWasVisible) return;
+    chatWasVisible = visible;
+    // The player box changes width here; without this the video keeps the size
+    // it had while chat was open and the old chat column stays black.
+    applyNonStickyChatLayout();
+    if (isActive()) notifyResize();
   }
 
   let popupObserver = null;
@@ -304,6 +329,8 @@
     const update = () => {
       const open = getComputedStyle(popup).display !== 'none' && popup.offsetParent !== null;
       document.documentElement.classList.toggle('wfs-menu-open', open && isActive());
+      // Reopening the gear should land on YouTube's menu, not wherever we left off.
+      if (!open && !adjustingPopup) closePanel();
     };
     popupObserver = new MutationObserver(update);
     popupObserver._target = popup;
@@ -347,7 +374,10 @@
     if (chatAttrObserver) chatAttrObserver.disconnect();
     chatAttrObserver = new MutationObserver(updateChatVisibilityClass);
     chatAttrObserver._target = chat;
-    chatAttrObserver.observe(chat, { attributes: true, attributeFilter: ['collapsed'] });
+    chatAttrObserver.observe(chat, {
+      attributes: true,
+      attributeFilter: ['collapsed', 'hide-chat-frame', 'hidden', 'style'],
+    });
     updateChatVisibilityClass();
   }
 
@@ -406,9 +436,14 @@
     document.body.appendChild(handle);
   }
 
+  // YouTube sizes the settings panel to its widest item, and every submenu you
+  // open from it inherits that width. Keep these no wider than YouTube's own
+  // longest label ("Playback speed") or the whole menu grows, badly so on a
+  // large player where the panel font scales up with it. The unabbreviated
+  // names live in the options page.
   const MENU_ITEMS = [
     {
-      label: 'Auto window fullscreen',
+      label: 'Auto windowed',
       key: 'autoToggle',
       icon: '<svg fill="none" height="24" viewBox="0 0 24 24" width="24"><path class="ytp-svg-fill" fill="#fff" fill-rule="evenodd" d="M 4,5 L 20,5 L 20,19 L 4,19 Z M 6,7 L 6,17 L 18,17 L 18,7 Z"/><path class="ytp-svg-fill" fill="#fff" d="M 10,9 L 15,12 L 10,15 Z"/></svg>',
     },
@@ -463,13 +498,231 @@
     return div;
   }
 
-  function injectMenuItems() {
-    const panel = document.querySelector(SEL.settingsPanel);
-    if (!panel) return;
-    if (panel.querySelector('.' + MENU_ITEM_CLASS)) return;
-    for (const cfg of MENU_ITEMS) {
-      panel.appendChild(createMenuItem(cfg.label, cfg.key, cfg.icon));
+  // YouTube swaps panels through one container rather than keeping them side by
+  // side, so ".ytp-panel-menu" resolves to whichever panel is showing: the
+  // Quality list as readily as the top level. Appending to that blindly puts
+  // extension rows at the bottom of Quality and Sleep timer. A submenu carries a
+  // back-button header; the top level does not. Our own panel has one too, which
+  // is what keeps this from finding itself.
+  function getSettingsPanelMenu() {
+    for (const panel of document.querySelectorAll(SEL.settingsPanel)) {
+      if (panel.querySelector('.ytp-panel-header')) continue;
+      const menu = panel.querySelector('.ytp-panel-menu');
+      if (menu) return menu;
     }
+    return null;
+  }
+
+  // One row in YouTube's menu instead of three. Three rows nearly doubled the
+  // height of the top level and forced a scrollbar, and the widest of them set
+  // the width of the whole menu including every submenu opened from it.
+  function createMenuRow() {
+    const row = document.createElement('div');
+    row.className = 'ytp-menuitem ' + MENU_ROW_CLASS;
+    row.setAttribute('role', 'menuitem');
+    row.setAttribute('aria-haspopup', 'true');
+    row.tabIndex = 0;
+
+    const icon = document.createElement('div');
+    icon.className = 'ytp-menuitem-icon';
+    icon.appendChild(parseSvg(ICON_SVG));
+
+    const label = document.createElement('div');
+    label.className = 'ytp-menuitem-label';
+    label.textContent = PANEL_TITLE;
+
+    // YouTube draws the chevron from aria-haspopup; the value slot stays empty
+    // because no single one of three toggles is "the" value of this row.
+    const content = document.createElement('div');
+    content.className = 'ytp-menuitem-content';
+
+    row.append(icon, label, content);
+
+    const open = (e) => {
+      e.stopPropagation();
+      openPanel();
+    };
+    row.addEventListener('click', open);
+    row.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        open(e);
+      }
+    });
+    return row;
+  }
+
+  function createPanel() {
+    const panel = document.createElement('div');
+    panel.className = 'ytp-panel ' + PANEL_CLASS;
+
+    const header = document.createElement('div');
+    header.className = 'ytp-panel-header';
+    const backWrap = document.createElement('div');
+    backWrap.className = 'ytp-panel-back-button-container';
+    const back = document.createElement('button');
+    back.className = 'ytp-button ytp-panel-back-button';
+    back.setAttribute('aria-label', 'Back to previous menu');
+    back.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closePanel();
+    });
+    backWrap.appendChild(back);
+    const title = document.createElement('span');
+    title.className = 'ytp-panel-title';
+    title.setAttribute('role', 'heading');
+    title.setAttribute('aria-level', '2');
+    title.textContent = PANEL_TITLE;
+    header.append(backWrap, title);
+
+    const menu = document.createElement('div');
+    menu.className = 'ytp-panel-menu';
+    for (const cfg of MENU_ITEMS) {
+      menu.appendChild(createMenuItem(cfg.label, cfg.key, cfg.icon));
+    }
+
+    panel.append(header, menu);
+    panel.style.display = 'none';
+    return panel;
+  }
+
+  // The popup's size is inline on .ytp-settings-menu and YouTube's controller
+  // only maintains it for its own panels, so ours has to measure and restore.
+  // Writing to that style attribute is also what the popup observer watches, so
+  // `adjustingPopup` keeps it from deciding the menu closed mid-measurement.
+  let savedPopupSize = null;
+  let adjustingPopup = false;
+  // Wide enough that no row wraps while being measured. Measuring inside a
+  // popup that is already at its cramped width returns the wrapped height and
+  // a width that bakes the wrapping in.
+  const MEASURE_WIDTH = 600;
+
+  // How wide the panel has to be for no row to wrap. YouTube's own CSS pins
+  // .ytp-panel to the popup width, so neither `max-content` nor a roomy popup
+  // makes the panel report what it actually needs; the labels have to be
+  // measured directly, the way YouTube measures its own.
+  function requiredPanelWidth(panel) {
+    const rows = panel.querySelectorAll('.' + MENU_ITEM_CLASS);
+    if (!rows.length) return 0;
+
+    const probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;top:-9999px;';
+    document.body.appendChild(probe);
+
+    let widestLabel = 0;
+    let chrome = 0;
+    for (const row of rows) {
+      const label = row.querySelector('.ytp-menuitem-label');
+      if (!label) continue;
+      probe.style.font = getComputedStyle(label).font;
+      probe.textContent = label.textContent;
+      widestLabel = Math.max(widestLabel, probe.getBoundingClientRect().width);
+      // Everything in the row that is not the label: icon and toggle columns.
+      chrome = Math.max(chrome, row.getBoundingClientRect().width - label.getBoundingClientRect().width);
+    }
+    probe.remove();
+
+    const rowWidth = rows[0].getBoundingClientRect().width;
+    const panelPadding = Math.max(0, panel.getBoundingClientRect().width - rowWidth);
+    return Math.ceil(widestLabel + chrome + panelPadding);
+  }
+
+  function getPopup() {
+    return document.querySelector('.ytp-settings-menu');
+  }
+
+  function openPanel() {
+    const popup = getPopup();
+    const topMenu = getSettingsPanelMenu();
+    const topPanel = topMenu && topMenu.closest('.ytp-panel');
+    const content = popup && popup.querySelector('.ytp-popup-content');
+    if (!popup || !topPanel || !content) return;
+
+    let panel = content.querySelector('.' + PANEL_CLASS);
+    if (!panel) {
+      panel = createPanel();
+      content.appendChild(panel);
+    }
+
+    adjustingPopup = true;
+    savedPopupSize = { width: popup.style.width, height: popup.style.height };
+    topPanel.style.display = 'none';
+    panel.style.display = '';
+
+    // Lay it out somewhere roomy first so the row chrome measures at its real
+    // size, then pin width and height: YouTube transitions both, and neither
+    // animates from `auto`.
+    popup.style.width = MEASURE_WIDTH + 'px';
+    popup.style.height = 'auto';
+    const width = requiredPanelWidth(panel);
+    // A zero measurement means the popup was torn down underneath us. Leaving
+    // 0px inline would make it invisible for good, so keep what YouTube had.
+    if (width > 0) {
+      popup.style.width = width + 'px';
+      popup.style.height = Math.ceil(panel.getBoundingClientRect().height) + 'px';
+    } else {
+      popup.style.width = savedPopupSize.width;
+      popup.style.height = savedPopupSize.height;
+    }
+    adjustingPopup = false;
+    syncMenuItemStates();
+    const first = panel.querySelector('.' + MENU_ITEM_CLASS);
+    if (first) first.focus();
+  }
+
+  function closePanel() {
+    const popup = getPopup();
+    const panel = popup && popup.querySelector('.' + PANEL_CLASS);
+    if (!popup || !panel || panel.style.display === 'none') return;
+
+    panel.style.display = 'none';
+    const topMenu = getSettingsPanelMenu();
+    const topPanel = topMenu && topMenu.closest('.ytp-panel');
+    if (topPanel) topPanel.style.removeProperty('display');
+    if (!topPanel) {
+      // Nothing left to go back to; the menu was rebuilt underneath us.
+      panel.remove();
+    }
+    if (savedPopupSize) {
+      popup.style.width = savedPopupSize.width;
+      popup.style.height = savedPopupSize.height;
+      savedPopupSize = null;
+    }
+    const row = topMenu && topMenu.querySelector('.' + MENU_ROW_CLASS);
+    if (row) row.focus();
+  }
+
+  // YouTube rebuilds the top-level panel every time the menu opens, so a panel
+  // of ours left showing belongs to a menu that no longer exists. Relying on the
+  // popup observer alone to notice the close was not enough: reopening the gear
+  // could land straight back inside our panel.
+  function discardStalePanel() {
+    document.querySelectorAll('.' + PANEL_CLASS).forEach((el) => el.remove());
+    savedPopupSize = null;
+  }
+
+  // Our panel hides YouTube's top-level one to take its place, so if the popup
+  // goes away while ours is showing, the top level stays hidden and the next
+  // open lands inside our panel. Watching the popup for the close was not
+  // enough on its own, so the invariant is re-asserted every pass instead:
+  // popup not on screen means our panel is not open.
+  function enforcePanelState() {
+    const popup = getPopup();
+    if (!popup) return;
+    const visible = getComputedStyle(popup).display !== 'none' && popup.offsetParent !== null;
+    if (!visible && !adjustingPopup) closePanel();
+  }
+
+  function injectMenuItems() {
+    const panel = getSettingsPanelMenu();
+    // A row that landed anywhere else rides along inside whichever submenu is
+    // open, which is exactly the bug this replaced.
+    document.querySelectorAll('.' + MENU_ROW_CLASS).forEach((el) => {
+      if (el.parentElement !== panel) el.remove();
+    });
+    if (!panel || panel.querySelector('.' + MENU_ROW_CLASS)) return;
+    discardStalePanel();
+    panel.appendChild(createMenuRow());
   }
 
   function syncMenuItemStates() {
@@ -582,9 +835,10 @@
     else if (btn.getBoundingClientRect().width === 0) broken.push('buttonInvisible');
 
     // Only checkable once YouTube has actually built the settings panel, which
-    // it does lazily. Absent panel means "unknown", not "broken".
-    const panel = document.querySelector(SEL.settingsPanel);
-    if (panel && !panel.querySelector('.' + MENU_ITEM_CLASS)) broken.push('menuItemsNotInjected');
+    // it does lazily, and only while the top level is the panel on screen.
+    // Absent panel means "unknown", not "broken".
+    const panel = getSettingsPanelMenu();
+    if (panel && !panel.querySelector('.' + MENU_ROW_CLASS)) broken.push('menuItemsNotInjected');
 
     if (!broken.length) return;
     LOG('health check failed:', broken.join(', '));
@@ -602,9 +856,11 @@
       injectChatButton();
       injectResizeHandle();
       injectMenuItems();
+      enforcePanelState();
       watchChatState();
       watchTheaterState();
       watchPopupState();
+      updateChatVisibilityClass();
       applyNonStickyChatLayout();
       maybeAutoToggle();
     });
@@ -630,18 +886,44 @@
 
   const TOP_HOVER_THRESHOLD = 30;
   const MASTHEAD_REVEAL_CLASS = 'wfs-masthead-revealed';
+  // Reaching the top strip reveals the masthead, and moving back down hides it.
+  // The pointer can also leave through the top of the window into the browser's
+  // own toolbar, and mousemove stops firing there, so that exit needs a timer:
+  // brushing past the top edge should not pin the bar open for the rest of the
+  // video. Long enough that a quick detour to the tab strip and back does not
+  // make it flicker.
+  const MASTHEAD_HIDE_DELAY_MS = 1200;
+  let mastheadHideTimer = null;
+
+  function revealMasthead(on) {
+    clearTimeout(mastheadHideTimer);
+    document.documentElement.classList.toggle(MASTHEAD_REVEAL_CLASS, on);
+  }
 
   document.addEventListener('mousemove', (e) => {
     if (!isActive() || !settings.hideMasthead) return;
     const html = document.documentElement;
     const revealed = html.classList.contains(MASTHEAD_REVEAL_CLASS);
     if (e.clientY <= TOP_HOVER_THRESHOLD) {
-      if (!revealed) html.classList.add(MASTHEAD_REVEAL_CLASS);
+      if (!revealed) revealMasthead(true);
+      else clearTimeout(mastheadHideTimer);
     } else if (revealed) {
       const masthead = document.querySelector('#masthead-container');
       const bottom = (masthead && masthead.offsetHeight) || 56;
-      if (e.clientY > bottom + 20) html.classList.remove(MASTHEAD_REVEAL_CLASS);
+      if (e.clientY > bottom + 20) revealMasthead(false);
+      else clearTimeout(mastheadHideTimer);
     }
+  });
+
+  // Pointer left the page: out the top into the browser UI, or off the window
+  // entirely. Nothing else will tell us to put the bar away. Focus stays
+  // respected either way, since content.css keeps the masthead up on
+  // :focus-within for as long as the search box holds the caret.
+  document.documentElement.addEventListener('mouseleave', () => {
+    if (!isActive() || !settings.hideMasthead) return;
+    if (!document.documentElement.classList.contains(MASTHEAD_REVEAL_CLASS)) return;
+    clearTimeout(mastheadHideTimer);
+    mastheadHideTimer = setTimeout(() => revealMasthead(false), MASTHEAD_HIDE_DELAY_MS);
   });
 
   function isWatchPage() {
