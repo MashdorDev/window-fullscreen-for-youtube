@@ -1,9 +1,10 @@
 // Background event page (Firefox) / service worker (Chrome).
 //
-// It exists for two reasons: consent has to be re-checked somewhere the
+// It exists for three reasons: consent has to be re-checked somewhere the
 // content script can't reach (chrome.permissions is not exposed to content
-// scripts), and the report has to be sent from the extension origin — a fetch
-// from a content script runs against YouTube's CSP.
+// scripts), the report has to be sent from the extension origin — a fetch
+// from a content script runs against YouTube's CSP — and runtime.onInstalled,
+// the only place an update can be noticed, fires here.
 'use strict';
 
 const DSN_KEY = 'a015d941e8214ab796b74cbfc04d8cbb';
@@ -62,4 +63,39 @@ chrome.permissions.onRemoved.addListener((perms) => {
   if (perms.data_collection && perms.data_collection.includes(DATA_PERMISSION)) {
     chrome.storage.sync.set({ healthReporting: false });
   }
+});
+
+// --- Update notice -----------------------------------------------------------
+//
+// Extensions update silently, so the first a user hears of a change is usually
+// the change itself. `lastSeenVersion` is what the popup diffs against to show
+// release highlights once; the toolbar dot is how they find out there is
+// anything to see without a tab being opened at them.
+//
+// Kept in storage.local rather than sync on purpose: it is "has this browser
+// shown me this yet", not a preference. Syncing it would let one machine eat
+// the notice for a second one that has not even updated yet.
+
+const UNREAD_BADGE = '•';
+
+async function rememberVersionForUpdateNotice(previousVersion) {
+  const { lastSeenVersion } = await chrome.storage.local.get({ lastSeenVersion: null });
+  // Two updates before the popup is ever opened: keep the older mark, so the
+  // highlights from the skipped release are still shown.
+  if (!lastSeenVersion) await chrome.storage.local.set({ lastSeenVersion: previousVersion });
+  chrome.action.setBadgeText({ text: UNREAD_BADGE });
+  if (chrome.action.setBadgeBackgroundColor) {
+    chrome.action.setBadgeBackgroundColor({ color: '#4da3ff' });
+  }
+}
+
+chrome.runtime.onInstalled.addListener(({ reason, previousVersion }) => {
+  const current = chrome.runtime.getManifest().version;
+  if (reason === 'install') {
+    // A new user has no "before" to be shown the difference from.
+    chrome.storage.local.set({ lastSeenVersion: current });
+    return;
+  }
+  if (reason !== 'update' || !previousVersion || previousVersion === current) return;
+  rememberVersionForUpdateNotice(previousVersion);
 });
