@@ -18,6 +18,7 @@ switch on breakage reports, which are off by default.
 - **Privacy Policy** — what the extension does (and does not) do with your data.
 - **Architecture** — how the extension is built.
 - **Release & CI** — how versions ship to the stores.
+- **Store Metrics**, where the install and user numbers live and how to pull them.
 - **Contributing** — local development and how to submit changes.
 
 ## What it does

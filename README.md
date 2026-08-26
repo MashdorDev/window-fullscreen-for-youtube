@@ -71,6 +71,7 @@ with the markdown source under [`docs/`](./docs) in this repo.
 - [Privacy Policy](https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/)
 - [Architecture](./docs/architecture.md)
 - [Release & CI](./docs/release-and-ci.md)
+- [Store Metrics](./docs/store-metrics.md)
 
 ## Why this exists
 
