@@ -21,6 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **A false break report on those pages.** The health check measures the injected button and
   reports a zero-width one as broken, so every waiting-stream page told the developer that
   YouTube had changed something. It has a real button to measure now.
+- **Auto windowed no longer fires outside a watch page.** It watched the `<video>` source
+  for a change and treated any new one as a new video to watch, and Shorts play through the
+  same element, so scrolling the Shorts feed with the setting on turned windowed fullscreen
+  on over it. The extension then spent fifteen clicks trying to put a shorts player into
+  theater mode and reported the failure, which was most of the second-largest error in the
+  tracker. It now waits for a watch page.
 
 ## [0.4.0] - 2026-08-25
 

@@ -789,6 +789,12 @@
   let lastAutoSrc = null;
   function maybeAutoToggle() {
     if (!settings.autoToggle) return;
+    // Shorts play through the same <video>, and so does the home page's preview
+    // on a hovered thumbnail, so a new source is not on its own a new video to
+    // watch. Without this the extension turned itself on over the Shorts feed
+    // and then spent fifteen clicks failing to put a shorts player into theater
+    // mode, which is what most of the theaterModeFailed reports were.
+    if (!isWatchPage()) return;
     const video = document.querySelector(SEL.video);
     if (!video || !video.src) return;
     if (video.src === lastAutoSrc) return;
