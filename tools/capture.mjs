@@ -1,6 +1,6 @@
 // Release screenshots, generated rather than taken by hand.
 //
-//   node tools/capture.mjs [--video=<id>] [--keep-open] [--only=name,name]
+//   node tools/capture.mjs [--video=<id>] [--waiting=<id>] [--keep-open] [--only=name,name]
 //
 // Launches a throwaway Chrome, loads this repo as an unpacked extension, drives
 // it through each scenario below, and writes a cropped image per scenario to
@@ -28,6 +28,11 @@ import { fileURLToPath } from 'node:url';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DEFAULT_VIDEO = 'vYIYIVmOo3Q'; // a 24/7 live stream, so live chat is present
+// The waiting-slate scenarios need a scheduled stream that has NOT started, and
+// any given one stops qualifying the moment it goes live. So this default has a
+// shelf life: when those two scenarios report "no longer on a waiting slate",
+// find a current one and pass --waiting=<id> rather than editing this.
+const DEFAULT_WAITING = 'TQRjW0WSdy0';
 const PORT = 9500 + Math.floor(Math.random() * 400);
 
 const args = process.argv.slice(2);
@@ -36,6 +41,7 @@ const flag = (name, fallback) => {
   return hit ? hit.slice(name.length + 3) : fallback;
 };
 const VIDEO = flag('video', DEFAULT_VIDEO);
+const WAITING = flag('waiting', DEFAULT_WAITING);
 const ONLY = flag('only', '').split(',').filter(Boolean);
 const KEEP_OPEN = args.includes('--keep-open');
 
@@ -182,6 +188,28 @@ const SCENARIOS = [
     },
   },
   {
+    // What 0.4.1 fixed: on a stream that has not started YouTube hides its
+    // control bar, so the two buttons sit on the player instead. Cropped wide
+    // enough that you can see they are on the player, not in a bar.
+    name: 'waiting-controls',
+    surface: 'waiting',
+    viewport: { width: 1440, height: 810 },
+    scale: 2,
+    format: 'jpeg',
+    where: '#wfs-overlay',
+    // The overlay sits 12px in from the player's top-right corner, so those two
+    // sides stop at the player edge and the rest opens onto the slate.
+    pad: { top: 12, right: 12, bottom: 190, left: 300 },
+  },
+  {
+    name: 'waiting-slate',
+    surface: 'waiting',
+    viewport: { width: 1440, height: 810 },
+    scale: 1,
+    format: 'jpeg',
+    setup: (page) => activate(page, { chat: true }),
+  },
+  {
     name: 'gear-menu',
     surface: 'watch',
     viewport: { width: 1440, height: 810 },
@@ -282,12 +310,16 @@ async function capture(page, scenario, outDir) {
       })()`
     );
     if (!box || box.width === 0) throw new Error('nothing matched ' + scenario.where);
-    const pad = scenario.pad || 0;
+    // An element parked in a corner needs the padding to grow inwards only:
+    // a symmetric pad around #wfs-overlay reaches past the player edge and
+    // pulls in the masthead and the chat panel.
+    const p = scenario.pad || 0;
+    const pad = typeof p === 'number' ? { top: p, right: p, bottom: p, left: p } : p;
     clip = {
-      x: Math.max(0, Math.round(box.x - pad)),
-      y: Math.max(0, Math.round(box.y - pad)),
-      width: Math.round(box.width + pad * 2),
-      height: Math.round(box.height + pad * 2),
+      x: Math.max(0, Math.round(box.x - pad.left)),
+      y: Math.max(0, Math.round(box.y - pad.top)),
+      width: Math.round(box.width + pad.left + pad.right),
+      height: Math.round(box.height + pad.top + pad.bottom),
       scale: scenario.scale,
     };
   } else if (scenario.fullPage) {
@@ -359,6 +391,7 @@ async function main() {
   // once a few renderers are alive at once, unreliable: the content script was
   // intermittently never injecting in the fifth tab.
   let watch = null;
+  let waiting = null;
 
   const openTab = async (url) => {
     const tab = await newTab(url);
@@ -378,6 +411,9 @@ async function main() {
     try {
       if (scenario.surface === 'options') {
         open = await openTab(`chrome-extension://${extensionId}/options.html`);
+      } else if (scenario.surface === 'waiting') {
+        if (!waiting) waiting = await openTab(`https://www.youtube.com/watch?v=${WAITING}`);
+        open = waiting;
       } else {
         if (!watch) watch = await openTab(`https://www.youtube.com/watch?v=${VIDEO}`);
         open = watch;
@@ -393,13 +429,21 @@ async function main() {
       await page.send('Page.bringToFront');
       await wait(1200);
 
-      if (scenario.surface === 'watch') {
+      if (scenario.surface === 'watch' || scenario.surface === 'waiting') {
         let ready = false;
         for (let i = 0; i < 30 && !ready; i++) {
           ready = await evaluate(page, `!!document.getElementById('wfs-button')`).catch(() => false);
           if (!ready) await wait(1000);
         }
         if (!ready) throw new Error('content script never injected');
+        if (scenario.surface === 'waiting') {
+          const onSlate = await evaluate(page, `(() => { const bar = document.querySelector('.ytp-chrome-bottom');
+            return !!bar && getComputedStyle(bar).display === 'none'; })()`);
+          if (!onSlate) {
+            skipped.push(`${scenario.name} (${WAITING} is no longer on a waiting slate; pass --waiting=<id>)`);
+            continue;
+          }
+        }
         if (scenario.needsChat) {
           const hasChat = await evaluate(page, `!!document.querySelector('ytd-live-chat-frame#chat')`);
           if (!hasChat) {
@@ -417,10 +461,11 @@ async function main() {
     } catch (e) {
       skipped.push(`${scenario.name} (${e.message})`);
     } finally {
-      if (open && open !== watch) await closeTab(open);
+      if (open && open !== watch && open !== waiting) await closeTab(open);
     }
   }
   if (watch) await closeTab(watch);
+  if (waiting) await closeTab(waiting);
 
   if (skipped.length) {
     console.log('\nnot captured:');

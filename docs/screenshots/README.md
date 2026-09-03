@@ -6,7 +6,8 @@ the next `npm run capture` overwrites the folder for the version it captures.
 ```sh
 npm run capture                       # every scenario, into docs/screenshots/<manifest version>/
 node tools/capture.mjs --only=popup   # one scenario
-node tools/capture.mjs --video=<id>   # a different stream (chat scenarios need a live one)
+node tools/capture.mjs --video=<id>    # a different stream (chat scenarios need a live one)
+node tools/capture.mjs --waiting=<id>  # a scheduled stream that has not started yet
 node tools/capture.mjs --keep-open    # leave Chrome up to poke at what it captured
 ```
 
@@ -21,3 +22,9 @@ A scenario that cannot run is reported and the script exits non-zero rather than
 producing a short set. `sticky-chat` and `masthead-reveal` need a stream with live chat,
 so they are skipped by name if the default stream has ended; pass `--video=` with a live
 one.
+
+`waiting-controls` and `waiting-slate` are the awkward pair: they need a scheduled stream
+that has **not started**, and the default one stops qualifying the moment it goes live.
+When they report "no longer on a waiting slate", find a current one and pass
+`--waiting=<id>`. There is no way to fake the state, since it is YouTube's own offline
+slate that takes the control bar down.
