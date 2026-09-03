@@ -13,6 +13,13 @@
 
 const WHATS_NEW_ENTRIES = [
   {
+    version: '0.4.1',
+    highlights: [
+      "The buttons now work on a stream that has not started yet. YouTube takes its control bar away on the waiting screen, so they sit on the player's top-right corner until the stream begins and then move back.",
+      'Auto windowed no longer switches itself on while you scroll Shorts.',
+    ],
+  },
+  {
     version: '0.4.0',
     highlights: [
       'Closing live chat gives the video the whole window back, instead of leaving the chat column sitting there empty.',

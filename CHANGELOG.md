@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-09-03
+
 ### Fixed
 - **The buttons now work on a stream that has not started yet.** A scheduled stream sits on
   a waiting slate with a countdown, and chat is already running, which is exactly when
