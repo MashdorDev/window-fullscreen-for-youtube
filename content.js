@@ -4,6 +4,7 @@
   const BUTTON_ID = 'wfs-button';
   const CHAT_BUTTON_ID = 'wfs-chat-button';
   const RESIZE_HANDLE_ID = 'wfs-chat-resize';
+  const OVERLAY_ID = 'wfs-overlay';
   const ACTIVE_CLASS = 'wfs-active';
   const SCROLLABLE_CLASS = 'wfs-scrollable';
   const CHAT_VISIBLE_CLASS = 'wfs-chat-visible';
@@ -28,6 +29,8 @@
     fullscreenButton: '.ytp-fullscreen-button',
     sizeButton: '.ytp-size-button',
     settingsPanel: '.ytp-settings-menu .ytp-panel',
+    chromeBottom: '.ytp-chrome-bottom',
+    player: '#movie_player',
     watchContainer: 'ytd-watch-flexy, ytd-watch-grid, ytd-watch, #player',
     video: 'video.html5-main-video',
   };
@@ -226,18 +229,54 @@
     return btn;
   }
 
-  function injectButton() {
-    if (isAdPlaying()) return;
-    const controls = document.querySelector(SEL.rightControls);
-    if (!controls) return;
-    if (controls.querySelector('#' + BUTTON_ID)) return;
-    const fullscreenBtn = controls.querySelector(SEL.fullscreenButton);
-    const btn = createButton();
-    if (fullscreenBtn && fullscreenBtn.parentNode) {
-      fullscreenBtn.parentNode.insertBefore(btn, fullscreenBtn);
-    } else {
-      controls.appendChild(btn);
+  // A scheduled stream that has not started yet, and one that has ended, both
+  // sit on an offline slate: the player is there, chat is already running, and
+  // YouTube takes the control bar down to display:none because there is nothing
+  // to control. Buttons injected into it are present but zero-sized, which is
+  // the whole feature gone right when someone wants to set the window up before
+  // the stream begins. So the controls move onto the player itself for as long
+  // as the bar is unusable, and move back into it the moment YouTube restores
+  // it. Read the computed display rather than the player's state classes: the
+  // bar is also hidden on the ended slate and on whatever slate comes next.
+  function isControlBarHidden() {
+    const bar = document.querySelector(SEL.chromeBottom);
+    return !!bar && getComputedStyle(bar).display === 'none';
+  }
+
+  function controlHost() {
+    if (isControlBarHidden()) {
+      const player = document.querySelector(SEL.player);
+      if (!player) return null;
+      let overlay = document.getElementById(OVERLAY_ID);
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = OVERLAY_ID;
+      }
+      if (overlay.parentNode !== player) player.appendChild(overlay);
+      return overlay;
     }
+    // Dropping the overlay takes whatever is still inside it with it; the
+    // injectors below build fresh buttons in the bar on this same pass.
+    const overlay = document.getElementById(OVERLAY_ID);
+    if (overlay) overlay.remove();
+    return document.querySelector(SEL.rightControls);
+  }
+
+  // The overlay has no fullscreen button to sit next to, so the same anchors
+  // place both hosts: unmatched means "put it at the end", and the chat button
+  // anchors on the window-fullscreen button, which does exist in either.
+  function placeControl(host, el, anchorSelector) {
+    const anchor = host.querySelector(anchorSelector);
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(el, anchor);
+    else host.appendChild(el);
+  }
+
+  function injectButton(host) {
+    if (isAdPlaying()) return;
+    if (!host) return;
+    const existing = document.getElementById(BUTTON_ID);
+    if (existing && host.contains(existing)) return;
+    placeControl(host, existing || createButton(), SEL.fullscreenButton);
   }
 
   function getChatElement() {
@@ -277,23 +316,16 @@
     return btn;
   }
 
-  function injectChatButton() {
+  function injectChatButton(host) {
     const existing = document.getElementById(CHAT_BUTTON_ID);
     if (!isChatAvailable()) {
       if (existing) existing.remove();
       return;
     }
-    if (existing) return;
     if (isAdPlaying()) return;
-    const controls = document.querySelector(SEL.rightControls);
-    if (!controls) return;
-    const wfsBtn = controls.querySelector('#' + BUTTON_ID);
-    const anchor = wfsBtn || controls.querySelector(SEL.fullscreenButton);
-    if (anchor && anchor.parentNode) {
-      anchor.parentNode.insertBefore(createChatButton(), anchor);
-    } else {
-      controls.appendChild(createChatButton());
-    }
+    if (!host) return;
+    if (existing && host.contains(existing)) return;
+    placeControl(host, existing || createChatButton(), '#' + BUTTON_ID);
   }
 
   function isChatVisible() {
@@ -336,6 +368,26 @@
     popupObserver._target = popup;
     popupObserver.observe(popup, { attributes: true, attributeFilter: ['style', 'class'] });
     update();
+  }
+
+  // The bar going up and down is a class flip on the player, and the page-wide
+  // observer below only watches childList, so nothing else would notice a
+  // stream leaving its slate and the controls would stay stranded on the player.
+  let playerStateObserver = null;
+  function watchPlayerState() {
+    const player = document.querySelector(SEL.player);
+    if (!player) {
+      if (playerStateObserver) {
+        playerStateObserver.disconnect();
+        playerStateObserver = null;
+      }
+      return;
+    }
+    if (playerStateObserver && playerStateObserver._target === player) return;
+    if (playerStateObserver) playerStateObserver.disconnect();
+    playerStateObserver = new MutationObserver(scheduleWork);
+    playerStateObserver._target = player;
+    playerStateObserver.observe(player, { attributes: true, attributeFilter: ['class'] });
   }
 
   let theaterObserver = null;
@@ -852,13 +904,15 @@
     pending = true;
     requestAnimationFrame(() => {
       pending = false;
-      injectButton();
-      injectChatButton();
+      const host = controlHost();
+      injectButton(host);
+      injectChatButton(host);
       injectResizeHandle();
       injectMenuItems();
       enforcePanelState();
       watchChatState();
       watchTheaterState();
+      watchPlayerState();
       watchPopupState();
       updateChatVisibilityClass();
       applyNonStickyChatLayout();

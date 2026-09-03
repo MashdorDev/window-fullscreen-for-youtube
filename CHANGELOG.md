@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **The buttons now work on a stream that has not started yet.** A scheduled stream sits on
+  a waiting slate with a countdown, and chat is already running, which is exactly when
+  someone wants the window set up before the stream begins. YouTube takes its control bar
+  down to `display: none` there, because there is nothing to control, so the two buttons
+  injected into it were present but zero pixels wide and there was no way to enter windowed
+  fullscreen except the hotkey. While the bar is down they move onto the player's top-right
+  corner instead, and they move back into the bar the moment YouTube puts it up. The same
+  applies to the slate a stream leaves behind when it ends. The check reads the bar's
+  computed display rather than the player's state classes, so it holds for whatever slate
+  YouTube adds next.
+- **A false break report on those pages.** The health check measures the injected button and
+  reports a zero-width one as broken, so every waiting-stream page told the developer that
+  YouTube had changed something. It has a real button to measure now.
+
 ## [0.4.0] - 2026-08-25
 
 <table>
