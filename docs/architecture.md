@@ -134,6 +134,15 @@ keeps these in place:
   `.ytp-fullscreen-button`, styled to match native controls. Click = toggle.
 - **Chat button** — a second control button that shows/collapses live chat, only present
   when a chat frame exists.
+- **On-player fallback** — a scheduled stream that has not started, and one that has ended,
+  both sit on an offline slate where YouTube takes `.ytp-chrome-bottom` down to
+  `display: none`, so anything injected into it is present at zero pixels wide. While that
+  is the case `controlHost()` hands the two buttons a `#wfs-overlay` box in the player's
+  top-right corner instead, and hands them back to the control bar when YouTube restores
+  it. One button element either way, moved rather than duplicated. The test is the bar's
+  computed display, not the player's state classes, so it holds for whichever slate comes
+  next; a `class` observer on `#movie_player` catches the switch, since the page-wide
+  observer only watches `childList`.
 - **Gear-menu submenu** — one `ytp-menuitem` row, "Window fullscreen", added to YouTube's
   settings popup. It opens a panel of ours holding the three toggles. See below.
 - **Chat resize handle** — a draggable divider that sets `--wfs-chat-width` and persists
