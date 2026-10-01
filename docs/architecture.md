@@ -41,7 +41,7 @@ Exceptions are the wrong thing to watch for here. Every YouTube lookup in
 `content.js` is guarded (`if (!controls) return;`), so a renamed class produces a
 silent no-op, not a throw. `runHealthCheck()` closes that gap: 15s after each
 watch-page navigation it re-runs the `SEL` selectors, confirms the injected button
-exists and has non-zero width, and confirms the gear-menu items are still in the
+exists and has non-zero width whenever YouTube's own controls are on screen, and confirms the gear-menu items are still in the
 settings panel when that panel exists. Anything that fails is reported by name,
 fingerprinted so one YouTube change groups into one issue.
 
@@ -49,6 +49,8 @@ It defers (up to four times) rather than reporting while an ad is playing, while
 the tab is hidden, or before the `video` element exists, since none of those mean
 YouTube changed. `ensureTheaterMode` reports `theaterModeFailed` separately when
 the size button is still present but clicking it no longer produces theater mode.
+It only reports if at least one click reached a size button that was on screen:
+before the watch page mounts, or in native fullscreen, there is nothing to click.
 
 ## How state works
 

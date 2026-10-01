@@ -31,7 +31,10 @@
     settingsPanel: '.ytp-settings-menu .ytp-panel',
     chromeBottom: '.ytp-chrome-bottom',
     player: '#movie_player',
-    watchContainer: 'ytd-watch-flexy, ytd-watch-grid, ytd-watch, #player',
+    // No bare `#player` fallback: on a fresh load YouTube mounts the player in
+    // a skeleton `div#player` straight under <body> for the first few seconds,
+    // and that div never gets a `theater` attribute.
+    watchContainer: 'ytd-watch-flexy, ytd-watch-grid, ytd-watch',
     video: 'video.html5-main-video',
   };
 
@@ -89,9 +92,18 @@
     if (btn) btn.click();
   }
 
-  function ensureTheaterMode(retries) {
+  // `clicked` records whether any attempt reached a size button that was on
+  // screen. Before the watch page has mounted, or in native fullscreen where
+  // YouTube hides the button, there is nothing to click, and running out of
+  // retries then says nothing about YouTube having changed.
+  function ensureTheaterMode(retries, clicked) {
     if (retries === undefined) retries = 15;
+    if (isInTheaterMode()) return;
     if (retries <= 0) {
+      if (!clicked) {
+        CRUMB('youtube', 'theater mode unavailable');
+        return;
+      }
       // The size button is still there but clicking it no longer produces
       // theater mode, which breaks the whole feature just as thoroughly.
       LOG('health check failed: theaterModeFailed');
@@ -99,11 +111,10 @@
       if (window.wfsReport) window.wfsReport(['theaterModeFailed']);
       return;
     }
-    if (isInTheaterMode()) return;
-    clickTheaterButton();
-    setTimeout(() => {
-      if (!isInTheaterMode()) ensureTheaterMode(retries - 1);
-    }, 300);
+    const btn = getWatchContainer() && document.querySelector(SEL.sizeButton);
+    const usable = !!btn && btn.getBoundingClientRect().width > 0;
+    if (usable) btn.click();
+    setTimeout(() => ensureTheaterMode(retries - 1, clicked || usable), 300);
   }
 
   function loadSettings() {
@@ -795,6 +806,10 @@
     // and then spent fifteen clicks failing to put a shorts player into theater
     // mode, which is what most of the theaterModeFailed reports were.
     if (!isWatchPage()) return;
+    // On a fresh load the video has a source seconds before the watch page
+    // exists to hold theater mode. Waiting here leaves lastAutoSrc unset, so
+    // the next pass after it mounts picks this video up.
+    if (!getWatchContainer()) return;
     const video = document.querySelector(SEL.video);
     if (!video || !video.src) return;
     if (video.src === lastAutoSrc) return;
@@ -890,7 +905,17 @@
 
     const btn = document.getElementById(BUTTON_ID);
     if (!btn) broken.push('buttonNotInjected');
-    else if (btn.getBoundingClientRect().width === 0) broken.push('buttonInvisible');
+    else if (btn.getBoundingClientRect().width === 0) {
+      // Zero width only means something when YouTube's own controls are
+      // showing. An unplayable video, a hidden player or a bar YouTube has
+      // taken down hides ours along with its own, and that is correct.
+      const inOverlay = !!btn.closest('#' + OVERLAY_ID);
+      const ref = document.querySelector(inOverlay ? SEL.player : SEL.fullscreenButton);
+      if (ref && ref.getBoundingClientRect().width > 0) {
+        CRUMB('health', 'button hidden beside visible controls', { host: inOverlay ? 'overlay' : 'bar' });
+        broken.push('buttonInvisible');
+      }
+    }
 
     // Only checkable once YouTube has actually built the settings panel, which
     // it does lazily, and only while the top level is the panel on screen.
