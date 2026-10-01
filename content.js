@@ -46,6 +46,7 @@
     hideMasthead: true,
     hideSidebar: true,
     hideComments: true,
+    exitOnEscape: true,
     chatWidth: 400,
   };
 
@@ -363,6 +364,12 @@
     if (isActive()) notifyResize();
   }
 
+  // YouTube's player menus stay in the DOM and hide with display, so presence
+  // alone says nothing about whether one is open.
+  function isShown(el) {
+    return getComputedStyle(el).display !== 'none' && el.offsetParent !== null;
+  }
+
   let popupObserver = null;
   function watchPopupState() {
     const popup = document.querySelector('.ytp-settings-menu, .ytp-popup');
@@ -370,7 +377,7 @@
     if (popupObserver && popupObserver._target === popup) return;
     if (popupObserver) popupObserver.disconnect();
     const update = () => {
-      const open = getComputedStyle(popup).display !== 'none' && popup.offsetParent !== null;
+      const open = isShown(popup);
       document.documentElement.classList.toggle('wfs-menu-open', open && isActive());
       // Reopening the gear should land on YouTube's menu, not wherever we left off.
       if (!open && !adjustingPopup) closePanel();
@@ -772,7 +779,7 @@
   function enforcePanelState() {
     const popup = getPopup();
     if (!popup) return;
-    const visible = getComputedStyle(popup).display !== 'none' && popup.offsetParent !== null;
+    const visible = isShown(popup);
     if (!visible && !adjustingPopup) closePanel();
   }
 
@@ -929,6 +936,10 @@
     if (window.wfsReport) window.wfsReport(broken);
   }
 
+  function isPlayerMenuOpen() {
+    return Array.from(document.querySelectorAll('.ytp-settings-menu, .ytp-popup')).some(isShown);
+  }
+
   let pending = false;
   function scheduleWork() {
     if (pending) return;
@@ -961,9 +972,15 @@
         e.stopImmediatePropagation();
         toggle();
       } else if (e.key === 'Escape' && isActive()) {
+        // Swallowed whether or not it exits. YouTube reads Esc as "leave the
+        // enlarged layout" and drops theater mode, which watchTheaterState
+        // would then take for the user leaving theater and exit anyway, so
+        // letting the key through makes the setting below do nothing. An open
+        // player menu is the exception: there Esc still belongs to YouTube.
+        if (isPlayerMenuOpen()) return;
         e.preventDefault();
         e.stopImmediatePropagation();
-        setActive(false);
+        if (settings.exitOnEscape) setActive(false);
       }
     },
     true

@@ -30,7 +30,7 @@ Built for ultrawide and dual-monitor users who lose real estate to YouTube's let
 ## Features
 
 - **Native player button** in YouTube's own control bar — not a toolbar popup, not a floating widget
-- **Rebindable hotkey** (default `Shift+F`): click the key in the popup and press a new one. `Esc` to exit
+- **Rebindable hotkey** (default `Shift+F`): click the key in the popup and press a new one. `Esc` to exit, which can be turned off
 - **Auto-toggle** on new video (optional)
 - **Scrollable mode** — keep scrolling past the player to reach comments and related videos
 - **Granular page-chrome hiding** — toggle masthead, sidebar, comments independently

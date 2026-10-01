@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Exit with Esc is now optional.** On by default, so nothing changes unless it is turned
+  off in Behavior. People who use windowed fullscreen as their normal way of watching reach
+  for `Esc` to dismiss whatever YouTube put on screen and lose the whole layout instead,
+  which is a five-key round trip back. Turning it off leaves the hotkey and the player
+  button as the ways out.
+  Thanks to [@Alisher17771](https://github.com/Alisher17771) for the idea and the code
+  ([#15](https://github.com/MashdorDev/window-fullscreen-for-youtube/pull/15)), the first
+  outside contribution to this project.
+
+### Changed
+- **`Esc` closes an open player menu first.** With the gear menu open, `Esc` now closes
+  the menu and leaves windowed fullscreen on. Before, it exited windowed fullscreen
+  instead.
+
 ## [0.4.2] - 2026-10-01
 
 Screenshots: [docs/screenshots/0.4.2/](docs/screenshots/0.4.2/)

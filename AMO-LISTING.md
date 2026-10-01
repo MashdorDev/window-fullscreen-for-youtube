@@ -18,7 +18,7 @@ Watch YouTube in true windowed fullscreen — the player fills your browser wind
 ### Features
 
 - **Native player button** right next to YouTube's own fullscreen icon
-- **Configurable hotkey** (default Shift+F), Esc to exit
+- **Configurable hotkey** (default Shift+F), Esc to exit (can be turned off)
 - **Auto-toggle on new videos** (optional)
 - **Scrollable mode** — keep the player large and still reach comments below
 - **Hover-to-reveal masthead** so the search bar is always one mouse-flick away

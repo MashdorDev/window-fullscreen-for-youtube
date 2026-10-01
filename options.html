@@ -27,7 +27,7 @@
         <span class="label" id="hotkey-label">Toggle hotkey</span>
         <button type="button" id="hotkey" class="keybind" aria-describedby="hotkey-label"></button>
       </div>
-      <p class="hint">Click it, then press the combination you want. <code>Esc</code> cancels, and always exits windowed fullscreen.</p>
+      <p class="hint">Click it, then press the combination you want. <code>Esc</code> cancels the rebind, and exits windowed fullscreen unless that is turned off below.</p>
     </section>
 
     <section>
@@ -43,6 +43,12 @@
           <span class="row-desc">Keeps the page scrollable while the player is enlarged, so comments and related videos stay reachable below.</span>
         </span>
         <input type="checkbox" id="scrollableMode">
+      </label>
+      <label class="row">
+        <span class="label">Exit with Esc
+          <span class="row-desc">Lets Esc leave windowed fullscreen. Off keeps the player enlarged for anyone who reaches for Esc out of habit; the hotkey and the player button still leave, and Esc still closes the player's own menus.</span>
+        </span>
+        <input type="checkbox" id="exitOnEscape">
       </label>
       <label class="row">
         <span class="label">Sticky chat

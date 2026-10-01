@@ -9,6 +9,7 @@
     hideMasthead: true,
     hideSidebar: true,
     hideComments: true,
+    exitOnEscape: true,
     healthReporting: false,
   };
 
@@ -23,6 +24,7 @@
     'hideMasthead',
     'hideSidebar',
     'hideComments',
+    'exitOnEscape',
   ];
 
   const hotkeyBtn = document.getElementById('hotkey');

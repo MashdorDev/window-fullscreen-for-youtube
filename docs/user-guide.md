@@ -11,7 +11,7 @@ visible and clickable. It's the "cinema, but not full takeover" middle ground.
 - Click the **windowed-fullscreen button** added to the player's bottom-right controls
   (next to the native fullscreen button), or
 - Press the **hotkey** (default `Shift+F`), or
-- Press **`Esc`** to exit.
+- Press **`Esc`** to exit, unless **Exit with Esc** is turned off in Behavior.
 
 ## Options
 
@@ -23,7 +23,7 @@ across your signed-in browsers.
 
 Click the key shown next to **Toggle hotkey**, then press the combination you want, the
 way you would rebind a key in a game. `Esc` cancels the rebind. `Tab` and `Space` are not
-accepted, and `Esc` always exits windowed fullscreen.
+accepted. `Esc` also exits windowed fullscreen while **Exit with Esc** is on.
 
 ### Behavior
 

@@ -153,7 +153,9 @@ keeps these in place:
 ## Input and navigation
 
 - **Hotkey** — a capture-phase `keydown` listener matches the configured combo
-  (default `Shift+F`); `Esc` exits when active. Ignored while typing in inputs.
+  (default `Shift+F`); `Esc` exits when active, unless `exitOnEscape` is off. Either way
+  `Esc` is swallowed while active, or YouTube drops theater mode and the theater
+  watcher exits anyway. Ignored while typing in inputs.
 - **Masthead reveal** — when the top bar is hidden, moving the mouse to the top ~30px
   reveals it, and moving back down past it hides it again. The pointer can also leave
   through the top of the window into the browser's own toolbar, where `mousemove` stops
