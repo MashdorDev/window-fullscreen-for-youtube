@@ -42,7 +42,9 @@ Granular control over what disappears in windowed fullscreen:
 - **Masthead (top bar)** — hidden by default; move the mouse to the very top to reveal it.
   It hides again when you move back down, or shortly after the pointer leaves the page
   entirely. Focus is respected: if you clicked into the search box, it stays put.
-- **Sidebar (related videos)**
+- **Sidebar (related videos)**: hidden by default. Turn it off, with **Scrollable mode** on,
+  to get related videos next to the comments under the player. Live chat uses this column
+  while it is open.
 - **Comments**
 
 Use **Reset to defaults** to restore everything.
