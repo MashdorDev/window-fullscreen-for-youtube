@@ -13,6 +13,12 @@
 
 const WHATS_NEW_ENTRIES = [
   {
+    version: '0.4.2',
+    highlights: [
+      'Auto windowed now turns on reliably when you open a video in a new tab, instead of sometimes giving up before the page finished loading.',
+    ],
+  },
+  {
     version: '0.4.1',
     highlights: [
       "The buttons now work on a stream that has not started yet. YouTube takes its control bar away on the waiting screen, so they sit on the player's top-right corner until the stream begins and then move back.",

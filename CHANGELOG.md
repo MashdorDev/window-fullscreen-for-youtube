@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-10-01
+
+Screenshots: [docs/screenshots/0.4.2/](docs/screenshots/0.4.2/)
+
 ### Fixed
 - **Auto windowed no longer fights the page while it is still loading.** On a fresh load
   YouTube starts the video inside a placeholder `div#player` a few seconds before the watch
