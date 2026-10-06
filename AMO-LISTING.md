@@ -81,7 +81,7 @@ https://github.com/MashdorDev/window-fullscreen-for-youtube
 ## Categories
 
 - Primary: **Photos, Music & Videos**
-- Tags (AMO picks from a fixed list): `youtube`, `video`, `streaming`, `chat`
+- Tags (AMO picks from a fixed list): `youtube`, `streaming`, `chat`
 
 ## Screenshot captions (AMO)
 
