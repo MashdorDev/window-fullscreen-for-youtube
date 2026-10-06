@@ -12,29 +12,38 @@ Watch YouTube in windowed fullscreen: the player fills your browser window witho
 
 ## Description
 
-AMO renders a small HTML subset (`<strong>`, `<em>`, `<ul>`, `<li>`, `<a>`, `<code>`,
-`<blockquote>`), not Markdown, and keeps line breaks. Paste this as is.
+AMO stores this as Markdown. It renders bold, italics, lists and links, but not
+headings, so section titles are bold lines. Paste this as is.
 
-```html
-<strong>Window Fullscreen for YouTube</strong> gives YouTube a real windowed-fullscreen mode. The player fills your browser window without taking over your screen, which suits ultrawide monitors, dual-screen setups, or anyone who wants a bigger player and still wants the rest of the browser.
+```markdown
+**Window Fullscreen for YouTube** gives YouTube a real windowed-fullscreen mode. The player fills your browser window without taking over your screen, which suits ultrawide monitors, dual-screen setups, or anyone who wants a bigger player and still wants the rest of the browser.
 
-<strong>Features</strong>
-<ul><li><strong>A button in the player</strong>, next to YouTube's own fullscreen button. No toolbar popup, no floating widget.</li><li><strong>Configurable hotkey</strong> (default Shift+F). Esc exits, and that can be turned off.</li><li><strong>Auto-enter on new videos</strong> (optional)</li><li><strong>Scrollable mode</strong>: keep the player large and still scroll down to the comments</li><li><strong>Hover to reveal the top bar</strong>, so search is one mouse move away</li><li><strong>Live chat side panel</strong> with a drag handle to resize it. Pin it to the right or let it scroll with the page.</li><li><strong>Hide what you don't want</strong>: top bar, related videos, comments</li><li><strong>Settings in YouTube's gear menu</strong>: the three most used toggles sit there, styled to match</li></ul>
-<strong>Why free?</strong>
+**Features**
+
+- **A button in the player**, next to YouTube's own fullscreen button. No toolbar popup, no floating widget.
+- **Configurable hotkey** (default Shift+F). Esc exits, and that can be turned off.
+- **Auto-enter on new videos** (optional)
+- **Scrollable mode**: keep the player large and still scroll down to the comments
+- **Hover to reveal the top bar**, so search is one mouse move away
+- **Live chat side panel** with a drag handle to resize it. Pin it to the right or let it scroll with the page.
+- **Hide what you don't want**: top bar, related videos, comments
+- **Settings in YouTube's gear menu**: the three most used toggles sit there, styled to match
+
+**Why free?**
 
 The most popular windowed-fullscreen extension moved its main features behind a paywall. This one has all of them for free, and the source is public so you can check what it does.
 
 No paywall. No subscription. No nag prompts. MIT licensed.
 
-<strong>Privacy</strong>
+**Privacy**
 
 The extension only runs on youtube.com and stores your settings in your browser's sync storage. It has no analytics, no tracking and no ads, and nothing is sold.
 
-The one exception is breakage reports, which are off until you turn them on. YouTube changes its player often, and when it does this extension can stop working without any visible error. With the setting on, it notices and reports which piece broke, so it gets fixed quickly. A report is a list of internal YouTube element names plus the last few extension actions. It never includes the page address, the video, or anything you type. You can revoke it at any time in about:addons. Full policy: <a href="https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/">privacy policy</a>.
+The one exception is breakage reports, which are off until you turn them on. YouTube changes its player often, and when it does this extension can stop working without any visible error. With the setting on, it notices and reports which piece broke, so it gets fixed quickly. A report is a list of internal YouTube element names plus the last few extension actions. It never includes the page address, the video, or anything you type. You can revoke it at any time in about:addons. Full policy: [privacy policy](https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/).
 
-<strong>Source code and bug reports</strong>
+**Source code and bug reports**
 
-<a href="https://github.com/MashdorDev/window-fullscreen-for-youtube">github.com/MashdorDev/window-fullscreen-for-youtube</a>
+[github.com/MashdorDev/window-fullscreen-for-youtube](https://github.com/MashdorDev/window-fullscreen-for-youtube)
 ```
 
 ## Chrome Web Store description
