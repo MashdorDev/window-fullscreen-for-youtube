@@ -8,52 +8,87 @@ Draft of the content to paste into the AMO submission form.
 
 ## Summary (max 250 chars)
 
-Watch YouTube in true windowed fullscreen — the player fills your browser window without going OS-level fullscreen. Built for ultrawide monitors, dual-screen setups, and anyone who wants a bigger player. Free forever, open source.
+Watch YouTube in windowed fullscreen: the player fills your browser window without going OS-level fullscreen. Built for ultrawide monitors, dual-screen setups and anyone who wants a bigger player. Free and open source.
 
-## Description (markdown supported on AMO)
+## Description
 
-```markdown
-**Window Fullscreen for YouTube** gives YouTube a real windowed-fullscreen mode. The player fills your browser window without taking over your screen — perfect for ultrawide monitors, dual-screen setups, or anyone who wants a bigger player while keeping the rest of the browser usable.
+AMO renders a small HTML subset (`<strong>`, `<em>`, `<ul>`, `<li>`, `<a>`, `<code>`,
+`<blockquote>`), not Markdown, and keeps line breaks. Paste this as is.
 
-### Features
+```html
+<strong>Window Fullscreen for YouTube</strong> gives YouTube a real windowed-fullscreen mode. The player fills your browser window without taking over your screen, which suits ultrawide monitors, dual-screen setups, or anyone who wants a bigger player and still wants the rest of the browser.
 
-- **Native player button** right next to YouTube's own fullscreen icon
-- **Configurable hotkey** (default Shift+F), Esc to exit (can be turned off)
-- **Auto-toggle on new videos** (optional)
-- **Scrollable mode** — keep the player large and still reach comments below
-- **Hover-to-reveal masthead** so the search bar is always one mouse-flick away
-- **Live chat side-panel** with a draggable resize handle — choose sticky chat or scroll-with-the-page
-- **Granular hide controls** for masthead, sidebar, comments
-- **Native YouTube integration** — three settings live inside YouTube's gear menu, styled to match
+<strong>Features</strong>
+<ul><li><strong>A button in the player</strong>, next to YouTube's own fullscreen button. No toolbar popup, no floating widget.</li><li><strong>Configurable hotkey</strong> (default Shift+F). Esc exits, and that can be turned off.</li><li><strong>Auto-enter on new videos</strong> (optional)</li><li><strong>Scrollable mode</strong>: keep the player large and still scroll down to the comments</li><li><strong>Hover to reveal the top bar</strong>, so search is one mouse move away</li><li><strong>Live chat side panel</strong> with a drag handle to resize it. Pin it to the right or let it scroll with the page.</li><li><strong>Hide what you don't want</strong>: top bar, related videos, comments</li><li><strong>Settings in YouTube's gear menu</strong>: the three most used toggles sit there, styled to match</li></ul>
+<strong>Why free?</strong>
 
-### Why free?
+The most popular windowed-fullscreen extension moved its main features behind a paywall. This one has all of them for free, and the source is public so you can check what it does.
 
-The most popular extension for windowed-fullscreen moved its core features behind a paywall, and the community wasn't happy. This extension ships every previously-paid feature free, source available for inspection.
+No paywall. No subscription. No nag prompts. MIT licensed.
 
-No paywall. No subscription. No nag prompts. Open source under MIT.
+<strong>Privacy</strong>
 
-### Privacy
+The extension only runs on youtube.com and stores your settings in your browser's sync storage. It has no analytics, no tracking and no ads, and nothing is sold.
 
-This extension only accesses youtube.com. It stores settings in your browser's sync storage. Nothing is collected or sold.
+The one exception is breakage reports, which are off until you turn them on. YouTube changes its player often, and when it does this extension can stop working without any visible error. With the setting on, it notices and reports which piece broke, so it gets fixed quickly. A report is a list of internal YouTube element names plus the last few extension actions. It never includes the page address, the video, or anything you type. You can revoke it at any time in about:addons. Full policy: <a href="https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/">privacy policy</a>.
 
-Breakage reports are the one exception, and they are off until you turn them on. YouTube changes its player often, and when it does this extension can stop working silently. With the setting on, it notices and reports which piece broke, so it can be fixed quickly. The report is a list of internal YouTube element names plus the last few extension actions. It never includes the page address, the video, or anything you type. You can revoke it at any time under about:addons.
+<strong>Source code and bug reports</strong>
 
-### Source code
+<a href="https://github.com/MashdorDev/window-fullscreen-for-youtube">github.com/MashdorDev/window-fullscreen-for-youtube</a>
+```
 
+## Chrome Web Store description
+
+Plain text only, no markup. The same content as AMO, with "about:addons" swapped for
+the Chrome wording.
+
+```text
+Window Fullscreen for YouTube gives YouTube a real windowed-fullscreen mode. The player fills your browser window without taking over your screen, which suits ultrawide monitors, dual-screen setups, or anyone who wants a bigger player and still wants the rest of the browser.
+
+FEATURES
+- A button in the player, next to YouTube's own fullscreen button. No toolbar popup, no floating widget.
+- Configurable hotkey (default Shift+F). Esc exits, and that can be turned off.
+- Auto-enter on new videos (optional)
+- Scrollable mode: keep the player large and still scroll down to the comments
+- Hover to reveal the top bar, so search is one mouse move away
+- Live chat side panel with a drag handle to resize it. Pin it to the right or let it scroll with the page.
+- Hide what you don't want: top bar, related videos, comments
+- Settings in YouTube's gear menu: the three most used toggles sit there, styled to match
+
+WHY FREE?
+The most popular windowed-fullscreen extension moved its main features behind a paywall. This one has all of them for free, and the source is public so you can check what it does.
+
+No paywall. No subscription. No nag prompts. MIT licensed.
+
+PRIVACY
+The extension only runs on youtube.com and stores your settings in your browser's sync storage. It has no analytics, no tracking and no ads, and nothing is sold.
+
+The one exception is breakage reports, which are off until you turn them on. YouTube changes its player often, and when it does this extension can stop working without any visible error. With the setting on, it notices and reports which piece broke, so it gets fixed quickly. A report is a list of internal YouTube element names plus the last few extension actions. It never includes the page address, the video, or anything you type. You can turn it off at any time in the extension's settings.
+
+SOURCE CODE AND BUG REPORTS
 https://github.com/MashdorDev/window-fullscreen-for-youtube
-
-### Support
-
-If this extension is useful to you, consider sponsoring development:
-
-- GitHub Sponsors: https://github.com/sponsors/MashdorDev
-- Ko-fi: https://ko-fi.com/dorzairidev
 ```
 
 ## Categories
 
 - Primary: **Photos, Music & Videos**
-- Tags: `youtube`, `fullscreen`, `video`, `ultrawide`, `chat`, `productivity`
+- Tags (AMO picks from a fixed list): `youtube`, `video`, `streaming`, `chat`
+
+## Screenshot captions (AMO)
+
+By AMO preview id, in listing order:
+
+| Preview | Caption |
+|---------|---------|
+| 375619 | Live chat docked beside the player |
+| 375620 | The player fills the window, with the button next to YouTube's fullscreen button |
+| 375621 | Settings: hotkey, auto-enter, scrollable mode, sticky chat and what to hide |
+| 375622 | Windowed, not OS fullscreen: your tabs and toolbar stay put |
+| 375623 | Scrollable mode: scroll down to the description and comments |
+| 375624 | Three toggles added to YouTube's own gear menu |
+| 375625 | A live stream with the chat side panel |
+| 375626 | Sticky chat stays on the right while you read the comments |
+| 375627 | Drag the chat edge to make it as wide as you like |
 
 ## Screenshot guide
 
