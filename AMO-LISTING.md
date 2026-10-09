@@ -118,7 +118,7 @@ For AMO requirements:
 ## Privacy policy
 
 The canonical policy is `docs/privacy-policy.md`, published at
-https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/ — that is the
+https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/, which is the
 URL both store listings point at. Keep the two in sync; the live page has to be
 updated separately (see `docs/release-and-ci.md`), it does not follow the repo.
 
@@ -133,5 +133,5 @@ updated separately (see `docs/release-and-ci.md`), it does not follow the repo.
 - [ ] Upload screenshots (4+)
 - [ ] Provide source-code link (GitHub)
 - [ ] Provide support email (or link to GitHub Issues)
-- [ ] If using minified code: provide source for AMO reviewers (we don't — code is plain JS)
+- [ ] If using minified code: provide source for AMO reviewers (not needed, the code is plain JS)
 - [ ] Submit for review
