@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **A link to the developer's site.** The Support section of the options page now ends
+  with "Made by Dor Zairi", linking to [dorzairi.com](https://dorzairi.com).
 - **Exit with Esc is now optional.** On by default, so nothing changes unless it is turned
   off in Behavior. People who use windowed fullscreen as their normal way of watching reach
   for `Esc` to dismiss whatever YouTube put on screen and lose the whole layout instead,

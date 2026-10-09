@@ -99,6 +99,8 @@ This extension is free and will stay free. If it's useful to you, consider suppo
 - [GitHub Sponsors](https://github.com/sponsors/MashdorDev)
 - [Ko-fi](https://ko-fi.com/dorzairidev)
 
+Made by [Dor Zairi](https://dorzairi.com).
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md). Active development happens on the `dev` branch; `main` is branch-protected and is what gets published to the stores.
