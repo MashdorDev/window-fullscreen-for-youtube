@@ -117,7 +117,7 @@ For AMO requirements:
 
 ## Demo video
 
-`Assets/promo-video.mp4` (20 seconds, 1080p). It is on YouTube at https://youtu.be/KB5SML_8dKk, which is the link for the Chrome Web Store "Promo video" field. AMO has no video field.
+`Assets/promo-video.mp4` (20 seconds, 1080p). It is on YouTube at https://youtu.be/KB5SML_8dKk, which is the link for the Chrome Web Store "Promo video" field. AMO has no video field, so the AMO description has a "Watch the 20-second demo on YouTube" link under its first paragraph, and the first AMO screenshot is the video poster padded to 1280x800, captioned with the link.
 
 ## Privacy policy
 
