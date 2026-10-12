@@ -115,6 +115,10 @@ For AMO requirements:
 - Minimum 1280×800
 - Show actual functionality, not promotional copy overlays
 
+## Demo video
+
+`Assets/promo-video.mp4` (20 seconds, 1080p). The Chrome Web Store only takes a YouTube link in the "Promo video" field, so upload it to YouTube and paste that link. AMO has no video field.
+
 ## Privacy policy
 
 The canonical policy is `docs/privacy-policy.md`, published at
