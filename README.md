@@ -13,6 +13,12 @@ Built for ultrawide and dual-monitor users who lose real estate to YouTube's let
 ## Showcase
 
 <p align="center">
+  <a href="Assets/promo-video.mp4"><img src="Assets/promo-video-poster.jpg" alt="Watch the 20-second demo: the YouTube player filling the browser window while tabs, address bar and taskbar stay visible" width="100%"></a>
+</p>
+
+<p align="center"><em>Watch the 20-second demo (click the image).</em></p>
+
+<p align="center">
   <img src="Assets/Chrome/fullwindowed.jpg" alt="Windowed fullscreen — the video fills the entire browser window while the tabs and address bar stay visible" width="100%">
 </p>
 
