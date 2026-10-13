@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **ReadFollow in the Support section.** The options page now has a short card for
+  [ReadFollow](https://github.com/MashdorDev/readfollow), a text to speech extension by the
+  same developer, linking to its page in the store for the browser you are using.
 - **A link to the developer's site.** The Support section of the options page now ends
   with "Made by Dor Zairi", linking to [dorzairi.com](https://dorzairi.com).
 - **Exit with Esc is now optional.** On by default, so nothing changes unless it is turned

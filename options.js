@@ -264,6 +264,11 @@
     }
   });
 
+  // Send people to the store for the browser they are in.
+  const readfollowStore = document.getElementById('readfollow-store');
+  const isFirefox = chrome.runtime.getURL('').startsWith('moz-extension:');
+  readfollowStore.href = readfollowStore.dataset[isFirefox ? 'firefox' : 'chrome'];
+
   load();
   renderWhatsNew();
   renderChangelog();

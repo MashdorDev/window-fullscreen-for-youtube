@@ -105,6 +105,8 @@ This extension is free and will stay free. If it's useful to you, consider suppo
 - [GitHub Sponsors](https://github.com/sponsors/MashdorDev)
 - [Ko-fi](https://ko-fi.com/dorzairidev)
 
+If you like Window Fullscreen, try [ReadFollow](https://github.com/MashdorDev/readfollow) by the same developer: text to speech that highlights each word on the page as it reads, so you can follow along ([Chrome](https://chromewebstore.google.com/detail/pipjjjdajcbfjbnmpnhlfkmlopmbbgkk), [Firefox](https://addons.mozilla.org/firefox/addon/readfollow-text-to-speech-with/)).
+
 Made by [Dor Zairi](https://dorzairi.com).
 
 ## Contributing

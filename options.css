@@ -388,6 +388,29 @@ a:hover {
   margin: 10px 0 0;
 }
 
+.more-extension {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+}
+
+.more-extension img {
+  flex-shrink: 0;
+}
+
+.more-extension h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.more-extension .hint {
+  margin: 2px 0 4px;
+}
+
 .support-btn.github:hover {
   background: var(--surface-hover);
   border-color: var(--border-strong);
