@@ -57,7 +57,7 @@ npm run capture                       # regenerate docs/screenshots/<version>/
 A release PR does four things: bump `version` in `manifest.json`, add the `CHANGELOG.md`
 entry, add a `whatsnew.js` entry if anything user-facing changed (that is what the popup
 shows), and run `npm run capture` **after** the bump so the screenshots are filed under
-the right version. Full detail in [docs/contributing.md](./docs/contributing.md).
+the right version. Full detail in [Contributing](https://docs.dorzairi.com/docs/cb625781-8963-422a-9f92-ca91e5102703/) on docs.dorzairi.com.
 
 Output goes to `web-ext-artifacts/`. File ignore patterns live in `web-ext-config.cjs`
 (auto-loaded by web-ext — note the hyphen; `docs/` and `Assets/` are excluded from the
