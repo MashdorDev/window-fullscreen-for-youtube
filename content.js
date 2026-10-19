@@ -6,6 +6,7 @@
   const RESIZE_HANDLE_ID = 'wfs-chat-resize';
   const OVERLAY_ID = 'wfs-overlay';
   const ACTIVE_CLASS = 'wfs-active';
+  const MORPH_CLASS = 'wfs-morphing';
   const SCROLLABLE_CLASS = 'wfs-scrollable';
   const CHAT_VISIBLE_CLASS = 'wfs-chat-visible';
   const STICKY_CHAT_CLASS = 'wfs-sticky-chat';
@@ -203,23 +204,101 @@
     return document.documentElement.classList.contains(ACTIVE_CLASS);
   }
 
-  function setActive(on) {
+  // YouTube's cinema-mode toggle morphs the player between layouts with a view
+  // transition (::view-transition-group(player-resize), 250ms). Ours used to
+  // jump instead: content.css transitions the player box, but YouTube resizes
+  // the video inside it in one step. Entering and leaving now morph too.
+  //
+  // When the toggle has to click the size button, YouTube answers the click
+  // with its own view transition about 5ms later, and starting a second one
+  // cancels whichever was first. So that path rides YouTube's: our layout goes
+  // in the moment `theater` flips, which is inside YouTube's update, and its
+  // new snapshot already holds windowed fullscreen. Without a click, or on a
+  // watch page that has view transitions off, we run our own.
+  //
+  // Theater mode lands 60-150ms after the click. The page is frozen while an
+  // update waits for it, hence the cap; on timeout the layout goes in anyway,
+  // as it did before.
+  const MORPH_THEATER_WAIT_MS = 400;
+  // YouTube's transition is 250ms from ~90ms after the click. The morph class
+  // has to outlive it, or the player loses its name mid-flight.
+  const MORPH_RIDE_MS = 600;
+
+  function canMorph() {
+    return (
+      typeof document.startViewTransition === 'function' &&
+      !document.hidden &&
+      isWatchPage() &&
+      !matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
+  }
+
+  function whenTheater(want, callback) {
+    const container = getWatchContainer();
+    if (!container || isInTheaterMode() === want) {
+      callback();
+      return;
+    }
+    const done = () => {
+      observer.disconnect();
+      clearTimeout(timer);
+      callback();
+    };
+    const observer = new MutationObserver(() => {
+      if (isInTheaterMode() === want) done();
+    });
+    const timer = setTimeout(done, MORPH_THEATER_WAIT_MS);
+    observer.observe(container, { attributes: true, attributeFilter: ['theater'] });
+  }
+
+  // `morph` is false when YouTube is already mid-transition and we are inside
+  // its update, so the change lands in its snapshot instead of cancelling it.
+  function setActive(on, morph = true) {
     CRUMB('ui', on ? 'enter windowed fullscreen' : 'exit windowed fullscreen', {
       theater: isInTheaterMode(),
       chat: isChatAvailable(),
     });
+    let clickTheater = false;
     if (on) {
       initialTheaterState = isInTheaterMode();
-      if (!initialTheaterState) ensureTheaterMode();
-      window.scrollTo(0, 0);
+      clickTheater = !initialTheaterState;
     } else if (initialTheaterState === false && isInTheaterMode()) {
-      clickTheaterButton();
+      clickTheater = true;
       initialTheaterState = null;
     }
-    document.documentElement.classList.toggle(ACTIVE_CLASS, on);
-    if (!on) revealMasthead(false);
-    applySettings();
-    notifyResize();
+    const click = () => {
+      if (!clickTheater) return;
+      if (on) ensureTheaterMode();
+      else clickTheaterButton();
+    };
+    const apply = () => {
+      if (on) window.scrollTo(0, 0);
+      document.documentElement.classList.toggle(ACTIVE_CLASS, on);
+      if (!on) revealMasthead(false);
+      applySettings();
+      notifyResize();
+    };
+
+    if (!morph || !canMorph()) {
+      click();
+      apply();
+      return;
+    }
+    const root = document.documentElement;
+    root.classList.add(MORPH_CLASS);
+    const container = getWatchContainer();
+    if (clickTheater && container && container.hasAttribute('view-transition-enabled')) {
+      whenTheater(on, apply);
+      click();
+      setTimeout(() => root.classList.remove(MORPH_CLASS), MORPH_RIDE_MS);
+      return;
+    }
+    const transition = document.startViewTransition(() => {
+      click();
+      apply();
+      if (clickTheater) return new Promise((resolve) => whenTheater(on, resolve));
+    });
+    transition.finished.finally(() => root.classList.remove(MORPH_CLASS));
   }
 
   function toggle() {
@@ -420,10 +499,13 @@
     }
     if (theaterObserver && theaterObserver._target === container) return;
     if (theaterObserver) theaterObserver.disconnect();
+    // A morph in flight is our own exit clicking theater off; setActive is
+    // already waiting on that flip. Anything else is the person (or YouTube)
+    // leaving theater, and YouTube is mid-transition for it right now.
     theaterObserver = new MutationObserver(() => {
-      if (isActive() && !isInTheaterMode()) {
+      if (isActive() && !isInTheaterMode() && !document.documentElement.classList.contains(MORPH_CLASS)) {
         CRUMB('youtube', 'theater mode dropped, exiting');
-        setActive(false);
+        setActive(false, false);
       }
     });
     theaterObserver._target = container;

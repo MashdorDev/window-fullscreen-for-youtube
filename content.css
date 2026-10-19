@@ -13,6 +13,34 @@
   }
 }
 
+/* Entering or leaving: the view transition in setActive() morphs the player,
+   the same way YouTube's ::view-transition-group(player-resize) does for cinema
+   mode. Only the new snapshot is shown, stretched from the old box to the new
+   one, and the box transitions above are off so that snapshot is the final
+   layout rather than the first frame of a 0.18s resize. */
+html.wfs-morphing #movie_player:not(.miniplayer) {
+  view-transition-name: wfs-player;
+}
+
+html.wfs-morphing #full-bleed-container,
+html.wfs-morphing #movie_player,
+html.wfs-morphing ytd-page-manager,
+html.wfs-morphing ytd-watch-flexy,
+html.wfs-morphing ytd-watch-flexy #primary,
+html.wfs-morphing #masthead-container,
+html.wfs-morphing ytd-masthead,
+html.wfs-morphing ytd-live-chat-frame#chat {
+  transition: none !important;
+}
+
+::view-transition-old(wfs-player) {
+  display: none;
+}
+
+::view-transition-new(wfs-player) {
+  animation: none;
+}
+
 html.wfs-active body {
   overflow-y: hidden !important;
   overflow-x: hidden !important;

@@ -26,6 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`Esc` closes an open player menu first.** With the gear menu open, `Esc` now closes
   the menu and leaves windowed fullscreen on. Before, it exited windowed fullscreen
   instead.
+- **Entering and leaving morph like cinema mode.** YouTube's own cinema mode grows the
+  player into place over 250ms. Windowed fullscreen used to jump there, because the video
+  inside the player resized in one step. It now uses the same view transition, so the
+  player grows into the window and shrinks back the way cinema mode does. Browsers without
+  view transitions, and anyone with reduced motion turned on, get the old behavior.
 
 ## [0.4.2] - 2026-10-01
 
