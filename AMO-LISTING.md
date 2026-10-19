@@ -121,10 +121,9 @@ For AMO requirements:
 
 ## Privacy policy
 
-The canonical policy is `docs/privacy-policy.md`, published at
+The canonical policy is the page at
 https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/, which is the
-URL both store listings point at. Keep the two in sync; the live page has to be
-updated separately (see `docs/release-and-ci.md`), it does not follow the repo.
+URL both store listings point at. It is edited there; there is no copy in this repo.
 
 ## Submission checklist
 
