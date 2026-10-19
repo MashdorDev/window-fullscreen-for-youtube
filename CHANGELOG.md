@@ -29,8 +29,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Entering and leaving morph like cinema mode.** YouTube's own cinema mode grows the
   player into place over 250ms. Windowed fullscreen used to jump there, because the video
   inside the player resized in one step. It now uses the same view transition, so the
-  player grows into the window and shrinks back the way cinema mode does. Browsers without
-  view transitions, and anyone with reduced motion turned on, get the old behavior.
+  player grows into the window and shrinks back the way cinema mode does, at the same frame
+  rate as cinema mode in Firefox and Chrome. Browsers without view transitions, and anyone
+  with reduced motion turned on, get the old behavior.
+
+  <img src="Assets/cinema-morph.gif" alt="Firefox playing Big Buck Bunny: the player grows from the normal watch page to fill the window, holds, then shrinks back to the watch page with the sidebar returning" width="720">
+
+- **Hide sidebar only applies in Scrollable mode.** Outside it nothing under the player can
+  be reached, so hiding the related videos changed nothing you could see. It did make
+  leaving windowed fullscreen lay the whole sidebar out from scratch, which Firefox showed
+  as a stutter.
 
 ## [0.4.2] - 2026-10-01
 
