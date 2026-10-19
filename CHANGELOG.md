@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-19
+
+Screenshots: [docs/screenshots/0.5.0/](docs/screenshots/0.5.0/)
+
 ### Added
 - **ReadFollow in the Support section.** The options page now has a short card for
   [ReadFollow](https://github.com/MashdorDev/readfollow), a text to speech extension by the

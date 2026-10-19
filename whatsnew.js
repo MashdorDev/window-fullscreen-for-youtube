@@ -13,6 +13,13 @@
 
 const WHATS_NEW_ENTRIES = [
   {
+    version: '0.5.0',
+    highlights: [
+      "Going into windowed fullscreen and back now animates the way YouTube's cinema mode does: the player grows into the window instead of jumping.",
+      'Exit with Esc can be turned off in Behavior, and with the gear menu open, Esc closes the menu first.',
+    ],
+  },
+  {
     version: '0.4.2',
     highlights: [
       'Auto windowed now turns on reliably when you open a video in a new tab, instead of sometimes giving up before the page finished loading.',
