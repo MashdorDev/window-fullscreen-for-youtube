@@ -195,8 +195,13 @@
   let settleTimer = null;
 
   function notifyResize() {
-    window.dispatchEvent(new Event('resize'));
     clearTimeout(settleTimer);
+    // While morphing, those transitions are off and the layout is final at
+    // once, and the player follows its own box. A synthetic resize only sets
+    // off YouTube's debounced page relayout about 180ms later, in the middle
+    // of the animation, which is a 150-250ms stall you can see.
+    if (document.documentElement.classList.contains(MORPH_CLASS)) return;
+    window.dispatchEvent(new Event('resize'));
     settleTimer = setTimeout(() => window.dispatchEvent(new Event('resize')), LAYOUT_SETTLE_MS);
   }
 
@@ -276,7 +281,9 @@
       document.documentElement.classList.toggle(ACTIVE_CLASS, on);
       if (!on) revealMasthead(false);
       applySettings();
-      notifyResize();
+      // applySettings already pings while active, and every extra resize is a
+      // full YouTube layout inside the frame the morph is waiting on.
+      if (!on) notifyResize();
     };
 
     if (!morph || !canMorph()) {
@@ -293,10 +300,20 @@
       setTimeout(() => root.classList.remove(MORPH_CLASS), MORPH_RIDE_MS);
       return;
     }
+    // The layout goes in once theater has landed, so the new snapshot is
+    // taken from the final page and YouTube only has to lay it out once.
     const transition = document.startViewTransition(() => {
-      click();
-      apply();
-      if (clickTheater) return new Promise((resolve) => whenTheater(on, resolve));
+      if (!clickTheater) {
+        apply();
+        return;
+      }
+      return new Promise((resolve) => {
+        whenTheater(on, () => {
+          apply();
+          resolve();
+        });
+        click();
+      });
     });
     transition.finished.finally(() => root.classList.remove(MORPH_CLASS));
   }

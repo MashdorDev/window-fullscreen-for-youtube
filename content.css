@@ -183,15 +183,15 @@ html.wfs-active.wfs-hide-masthead ytd-masthead:focus-within {
   pointer-events: auto !important;
 }
 
-html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #secondary {
+html.wfs-active.wfs-scrollable.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #secondary {
   display: none !important;
 }
 
-html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #columns {
+html.wfs-active.wfs-scrollable.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #columns {
   display: block !important;
 }
 
-html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #primary {
+html.wfs-active.wfs-scrollable.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #primary {
   width: 100% !important;
   max-width: none !important;
   margin-right: 0 !important;
@@ -199,9 +199,10 @@ html.wfs-active.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #primary
   box-sizing: border-box !important;
 }
 
-html.wfs-active:not(.wfs-scrollable).wfs-hide-comments ytd-watch-flexy #below,
 html.wfs-active:not(.wfs-scrollable).wfs-hide-comments ytd-watch-flexy #comments,
-html.wfs-active:not(.wfs-scrollable).wfs-hide-comments ytd-watch-flexy ytd-comments {
+html.wfs-active:not(.wfs-scrollable).wfs-hide-comments ytd-watch-flexy ytd-comments,
+html.wfs-morphing ytd-watch-flexy #comments,
+html.wfs-morphing ytd-watch-flexy ytd-comments {
   display: none !important;
 }
 
