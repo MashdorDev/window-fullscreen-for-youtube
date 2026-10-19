@@ -357,6 +357,7 @@ async function main() {
       '--enable-unsafe-extension-debugging',
       `--remote-debugging-port=${PORT}`,
       '--no-first-run',
+      '--mute-audio',
       '--no-default-browser-check',
       'about:blank',
     ],
