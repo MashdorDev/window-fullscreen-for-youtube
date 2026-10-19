@@ -183,6 +183,16 @@ html.wfs-active.wfs-hide-masthead ytd-masthead:focus-within {
   pointer-events: auto !important;
 }
 
+/* Without Scrollable mode, everything under the player stays laid out, so
+   leaving does not have to lay the sidebar and description out from scratch
+   in the middle of the morph. It is clipped to nothing, though, so the page is
+   one window tall and a scrollIntoView or Tab into the sidebar has nowhere to
+   scroll to. `clip` rather than `hidden`: it is not a scroll container. */
+html.wfs-active:not(.wfs-scrollable):not(.wfs-chat-visible) ytd-watch-flexy #columns {
+  height: 0 !important;
+  overflow: clip !important;
+}
+
 html.wfs-active.wfs-scrollable.wfs-hide-sidebar:not(.wfs-chat-visible) ytd-watch-flexy #secondary {
   display: none !important;
 }
