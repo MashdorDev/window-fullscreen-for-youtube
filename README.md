@@ -76,7 +76,6 @@ The docs live on docs.dorzairi.com and are edited there, not in this repo.
 - [Architecture](https://docs.dorzairi.com/docs/86e67596-ca8b-4019-a552-7823d5eea0e7/)
 - [Release & CI](https://docs.dorzairi.com/docs/813577bb-f376-46bb-be1e-d4f184993e7a/)
 - [Contributing](https://docs.dorzairi.com/docs/cb625781-8963-422a-9f92-ca91e5102703/)
-- [Store Metrics](https://docs.dorzairi.com/docs/33eecfd9-f0d8-4760-ad2b-ab6d27231d22/)
 
 ## Why this exists
 
