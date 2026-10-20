@@ -69,16 +69,13 @@ Every feature is free, forever — no paywall, no subscription, no nag prompts. 
 
 ## Documentation
 
-The docs live at
-**[docs.dorzairi.com](https://docs.dorzairi.com/docs/6bd59cc4-58fa-4c62-aca2-4c74c2c4aa95/)**.
-They are edited there, not in this repo.
+The docs live on docs.dorzairi.com and are edited there, not in this repo.
 
 - [User Guide](https://docs.dorzairi.com/docs/db7a214e-9481-4f93-b30b-8f4b62e50166/)
 - [Privacy Policy](https://docs.dorzairi.com/docs/5a8eb82d-4734-4ca3-8a4c-7d19c06787ce/)
 - [Architecture](https://docs.dorzairi.com/docs/86e67596-ca8b-4019-a552-7823d5eea0e7/)
 - [Release & CI](https://docs.dorzairi.com/docs/813577bb-f376-46bb-be1e-d4f184993e7a/)
 - [Contributing](https://docs.dorzairi.com/docs/cb625781-8963-422a-9f92-ca91e5102703/)
-- [Store Metrics](https://docs.dorzairi.com/docs/33eecfd9-f0d8-4760-ad2b-ab6d27231d22/)
 
 ## Why this exists
 
