@@ -43,9 +43,15 @@ async function send(event) {
   ].join('\n');
 
   try {
+    // In Firefox a CORS request would carry Origin: moz-extension://<id>, and
+    // that id is random per install. no-cors with these headers sends
+    // Origin: null. The response can't be read, and isn't needed.
     await fetch(ENDPOINT, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-sentry-envelope' },
+      mode: 'no-cors',
+      referrerPolicy: 'no-referrer',
+      credentials: 'omit',
+      headers: { 'Content-Type': 'text/plain' },
       body: envelope,
     });
   } catch (e) {

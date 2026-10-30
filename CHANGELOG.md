@@ -7,10 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-30
+
 ### Fixed
 - **No false breakage report when the browser stops drawing.** If the page counts as visible but
   the browser has stopped rendering it, the button is not added until drawing resumes. The health
   check took that for a YouTube change and reported it. It now waits.
+- **Reports no longer carry an install id in Firefox.** A report went out with an `Origin` header
+  holding the id Firefox generates per install. It now sends `Origin: null`.
 
 ## [0.5.0] - 2026-10-19
 
