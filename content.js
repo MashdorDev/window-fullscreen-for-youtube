@@ -996,10 +996,13 @@
 
   function runHealthCheck() {
     // An ad swaps out the control bar and a background tab may never lay the
-    // player out at all. Neither means YouTube changed, so wait instead.
+    // player out at all. A frame still owed means rendering has stopped while
+    // the page reads as visible, so the injectors simply have not had a turn.
+    // None of those mean YouTube changed, so wait instead.
     const settled = isWatchPage() && !isAdPlaying() &&
       document.visibilityState === 'visible' &&
-      !!document.querySelector(SEL.video);
+      !!document.querySelector(SEL.video) &&
+      !pending;
     if (!settled) {
       if (healthDeferrals++ < HEALTH_MAX_DEFERRALS) {
         healthTimer = setTimeout(runHealthCheck, HEALTH_DELAY_MS);
@@ -1031,7 +1034,7 @@
 
     if (!broken.length) return;
     LOG('health check failed:', broken.join(', '));
-    CRUMB('health', 'check failed', { broken: broken.join(',') });
+    CRUMB('health', 'check failed', { broken: broken.join(','), passes: workPasses });
     if (window.wfsReport) window.wfsReport(broken);
   }
 
@@ -1040,11 +1043,13 @@
   }
 
   let pending = false;
+  let workPasses = 0;
   function scheduleWork() {
     if (pending) return;
     pending = true;
     requestAnimationFrame(() => {
       pending = false;
+      workPasses += 1;
       const host = controlHost();
       injectButton(host);
       injectChatButton(host);

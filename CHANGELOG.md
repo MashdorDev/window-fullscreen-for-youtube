@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **No false breakage report when the browser stops drawing.** If the page counts as visible but
+  the browser has stopped rendering it, the button is not added until drawing resumes. The health
+  check took that for a YouTube change and reported it. It now waits.
+
 ## [0.5.0] - 2026-10-19
 
 Screenshots: [docs/screenshots/0.5.0/](docs/screenshots/0.5.0/)
