@@ -1007,14 +1007,20 @@
     // The skeleton player has every control and a working video, just no
     // watch container around it yet, so checking it reads as a rename.
     const player = document.querySelector(SEL.player);
-    const settled = isWatchPage() && !isAdPlaying() &&
+    const ready = isWatchPage() && !isAdPlaying() &&
       document.visibilityState === 'visible' &&
       !!document.querySelector(SEL.video) &&
-      !(player && player.closest(SEL.skeletonPlayer)) &&
       !pending;
-    if (!settled) {
+    const inSkeleton = !!(player && player.closest(SEL.skeletonPlayer));
+    if (!ready || inSkeleton) {
       if (healthDeferrals++ < HEALTH_MAX_DEFERRALS) {
         healthTimer = setTimeout(runHealthCheck, HEALTH_DELAY_MS);
+      } else if (ready) {
+        // Visible and playing, yet still on the skeleton after every wait:
+        // the watch page never mounted, which is worth knowing about.
+        LOG('health check failed: playerInSkeleton');
+        CRUMB('health', 'check failed', { broken: 'playerInSkeleton', passes: workPasses });
+        if (window.wfsReport) window.wfsReport(['playerInSkeleton']);
       }
       return;
     }
