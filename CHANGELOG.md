@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **No false breakage report while the watch page is still loading.** For the first seconds of a
+  fresh load, and much longer in a background tab, YouTube shows the player in a placeholder page
+  before the real watch page exists. The health check could run in that window and report the watch
+  page as missing. It now waits until the player has moved into the real page, and reports a
+  separate problem only if a page stays on the placeholder for 30 seconds while it is on screen.
+- **Channel pages no longer count as watch pages.** A channel address that happened to contain
+  "watch", such as `/c/watchmojo`, was treated as a video page, so the extension ran its watch page
+  logic against the channel's featured video.
+
 ## [0.5.1] - 2026-10-30
 
 ### Fixed
