@@ -992,10 +992,13 @@
   const HEALTH_SELECTORS = ['rightControls', 'fullscreenButton', 'sizeButton', 'watchContainer'];
   let healthTimer = null;
   let healthDeferrals = 0;
+  const HEALTH_SKELETON_STRIKES = 3;
+  let healthSkeletonStrikes = 0;
 
   function scheduleHealthCheck() {
     clearTimeout(healthTimer);
     healthDeferrals = 0;
+    healthSkeletonStrikes = 0;
     healthTimer = setTimeout(runHealthCheck, HEALTH_DELAY_MS);
   }
 
@@ -1012,15 +1015,19 @@
       !!document.querySelector(SEL.video) &&
       !pending;
     const inSkeleton = !!(player && player.closest(SEL.skeletonPlayer));
+    // A tab brought forward still shows the skeleton for the moment YouTube
+    // needs to mount, so only checks that found it visible and stuck count.
+    healthSkeletonStrikes = ready && inSkeleton ? healthSkeletonStrikes + 1 : 0;
+    if (healthSkeletonStrikes >= HEALTH_SKELETON_STRIKES) {
+      // Visible and stuck for 30 seconds: the watch page never mounted.
+      LOG('health check failed: playerInSkeleton');
+      CRUMB('health', 'check failed', { broken: 'playerInSkeleton', passes: workPasses });
+      if (window.wfsReport) window.wfsReport(['playerInSkeleton']);
+      return;
+    }
     if (!ready || inSkeleton) {
       if (healthDeferrals++ < HEALTH_MAX_DEFERRALS) {
         healthTimer = setTimeout(runHealthCheck, HEALTH_DELAY_MS);
-      } else if (ready) {
-        // Visible and playing, yet still on the skeleton after every wait:
-        // the watch page never mounted, which is worth knowing about.
-        LOG('health check failed: playerInSkeleton');
-        CRUMB('health', 'check failed', { broken: 'playerInSkeleton', passes: workPasses });
-        if (window.wfsReport) window.wfsReport(['playerInSkeleton']);
       }
       return;
     }
