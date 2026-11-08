@@ -36,6 +36,11 @@
     // a skeleton `div#player` straight under <body> for the first few seconds,
     // and that div never gets a `theater` attribute.
     watchContainer: 'ytd-watch-flexy, ytd-watch-grid, ytd-watch',
+    // That skeleton, while the player still sits in it. YouTube moves the
+    // player into the watch container and drops the skeleton once the page
+    // app has rendered, which a throttled background tab can put off for a
+    // minute or more.
+    skeletonPlayer: 'body > #player',
     video: 'video.html5-main-video',
   };
 
@@ -999,9 +1004,13 @@
     // player out at all. A frame still owed means rendering has stopped while
     // the page reads as visible, so the injectors simply have not had a turn.
     // None of those mean YouTube changed, so wait instead.
+    // The skeleton player has every control and a working video, just no
+    // watch container around it yet, so checking it reads as a rename.
+    const player = document.querySelector(SEL.player);
     const settled = isWatchPage() && !isAdPlaying() &&
       document.visibilityState === 'visible' &&
       !!document.querySelector(SEL.video) &&
+      !(player && player.closest(SEL.skeletonPlayer)) &&
       !pending;
     if (!settled) {
       if (healthDeferrals++ < HEALTH_MAX_DEFERRALS) {
@@ -1133,8 +1142,10 @@
   });
 
   function isWatchPage() {
+    // Anchored: a substring match also took channel URLs such as
+    // /c/watchmojo, whose featured video player has no watch container.
     const p = location.pathname;
-    return p.includes('/watch') || p.includes('/live/') || p.includes('/clip/');
+    return p === '/watch' || p.startsWith('/live/') || p.startsWith('/clip/');
   }
 
   window.addEventListener('yt-navigate-finish', () => {
