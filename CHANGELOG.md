@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-11-08
+
 ### Fixed
 - **No false breakage report while the watch page is still loading.** For the first seconds of a
   fresh load, and much longer in a background tab, YouTube shows the player in a placeholder page
