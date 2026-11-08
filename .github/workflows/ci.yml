@@ -31,6 +31,9 @@ jobs:
           node-version: '20'
       - name: web-ext lint
         run: npx --yes web-ext lint
+      # A version bump without its CHANGELOG section would reach the stores with no notes
+      - name: CHANGELOG has a section for this version
+        run: node tools/release-notes.mjs "$(node -p "require('./manifest.json').version")" > /dev/null
 
   build:
     name: Build .zip
@@ -105,10 +108,14 @@ jobs:
             echo "::error::AMO credentials (AMO_JWT_ISSUER / AMO_JWT_SECRET) not set."
             exit 1
           fi
+          # The CHANGELOG section becomes the version's release notes on AMO.
+          # Written outside the repo, which is also the source dir web-ext packs.
+          node tools/release-notes.mjs "${{ needs.detect-version.outputs.version }}" --amo > "$RUNNER_TEMP/amo-metadata.json"
           npx --yes web-ext sign \
             --api-key="$AMO_JWT_ISSUER" \
             --api-secret="$AMO_JWT_SECRET" \
-            --channel=listed
+            --channel=listed \
+            --amo-metadata="$RUNNER_TEMP/amo-metadata.json"
 
   # Runs only after Firefox publishes successfully ("Firefox, and after that Chrome").
   deploy-chrome:
@@ -193,12 +200,14 @@ jobs:
         with:
           name: extension-build-${{ github.sha }}
           path: ./artifact
+      - name: Release notes from CHANGELOG.md
+        run: node tools/release-notes.mjs "${{ needs.detect-version.outputs.version }}" > "$RUNNER_TEMP/release-notes.md"
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.detect-version.outputs.version }}
           name: v${{ needs.detect-version.outputs.version }}
-          generate_release_notes: true
+          body_path: ${{ runner.temp }}/release-notes.md
           files: |
             web-ext-artifacts/*.xpi
             ./artifact/*.zip
